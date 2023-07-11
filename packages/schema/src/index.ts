@@ -93,7 +93,7 @@ export interface CodeParam {
   /** 扩展字段 */
   [propName: string]: any;
 }
-export interface PastePosition {
+export interface PastePosition {hoo
   left?: number;
   top?: number;
 }

@@ -17,20 +17,25 @@
  */
 
 import { createApp, defineAsyncComponent } from 'vue';
+import ElementPlus from 'element-plus'; // 引入element-plus库
 
 import Core from '@tmagic/core';
 import { getUrlParam } from '@tmagic/utils';
 
 import components from '../.tmagic/async-comp-entry';
 import plugins from '../.tmagic/plugin-entry';
+import MessageBox from '../component/Messagebox.vue';
 
 import request from './utils/request';
 import AppComponent from './App.vue';
 import { getLocalConfig } from './utils';
 
-const magicApp = createApp(AppComponent);
+import 'element-plus/dist/index.css'; // 引入element-plus样式
 
+const magicApp = createApp(AppComponent);
+magicApp.use(ElementPlus);
 magicApp.use(request);
+magicApp.component('messagebox', MessageBox);
 
 Object.entries(components).forEach(([type, component]: [string, any]) => {
   magicApp.component(`magic-ui-${type}`, defineAsyncComponent(component));

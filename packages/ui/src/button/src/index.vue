@@ -23,6 +23,9 @@ export default defineComponent({
       default: () => ({}),
     },
   },
+  components: {
+    // AButton: Button,
+  },
   setup(props) {
     useApp(props);
     const vm: MButtonInstance = getCurrentInstance()?.proxy as MButtonInstance;

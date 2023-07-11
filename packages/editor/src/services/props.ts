@@ -33,6 +33,7 @@ class Props extends BaseService {
     propsConfigMap: {},
     propsValueMap: {},
   });
+  config: any;
 
   constructor() {
     super([

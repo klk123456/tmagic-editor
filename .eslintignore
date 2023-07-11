@@ -5,6 +5,7 @@ dest
 types
 public/entry
 public/runtime
+*.html
 
 comp-entry.ts
 config-entry.ts

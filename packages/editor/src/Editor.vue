@@ -64,7 +64,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onUnmounted, PropType, provide, reactive, toRaw, watch } from 'vue';
+import { defineComponent, onUnmounted, PropType, provide, reactive, ref, toRaw, watch } from 'vue';
 
 import { EventOption } from '@tmagic/core';
 import type { FormConfig } from '@tmagic/form';
@@ -90,6 +90,7 @@ import historyService from './services/history';
 import propsService from './services/props';
 import storageService from './services/storage';
 import uiService from './services/ui';
+import { transVue } from './utils/transvue';
 import type { ComponentGroup, MenuBarData, MenuButton, MenuComponent, Services, SideBarData, StageRect } from './type';
 
 export default defineComponent({
@@ -227,7 +228,10 @@ export default defineComponent({
   emits: ['props-panel-mounted', 'update:modelValue'],
 
   setup(props, { emit }) {
+    const transVueValue = ref<string | undefined>();
     const rootChangeHandler = (value: MApp, preValue?: MApp | null) => {
+      // console.log(value);
+      transVueValue.value = transVue(value);
       const nodeId = editorService.get('node')?.id || props.defaultSelected;
       let node;
       if (nodeId) {

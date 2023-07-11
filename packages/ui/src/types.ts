@@ -240,6 +240,12 @@ export interface MQrcode {
   url: string;
 }
 
+export interface BgContent {
+  appName: string;
+  pageName: string;
+  imgName: string;
+}
+
 export interface MPop extends MComponent {
   items?: MComponent[] | MContainer[];
   closeButtonStyle?: any;

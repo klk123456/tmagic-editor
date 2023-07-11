@@ -17,11 +17,18 @@
  */
 
 import { createApp } from 'vue';
+import ElementPlus from 'element-plus'; // 引入element-plus库
+
+import MessageBox from '../component/Messagebox.vue';
 
 import App from './App.vue';
 
+import 'element-plus/dist/index.css'; // 引入element-plus样式
+
 Promise.all([import('../.tmagic/comp-entry'), import('../.tmagic/plugin-entry')]).then(([components, plugins]) => {
   const magicApp = createApp(App);
+  magicApp.use(ElementPlus);
+  magicApp.component('messagebox', MessageBox);
 
   Object.entries(components.default).forEach(([type, component]: [string, any]) => {
     magicApp.component(`magic-ui-${type}`, component);

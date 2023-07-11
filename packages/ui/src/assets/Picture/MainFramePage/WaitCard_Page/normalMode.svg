@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="160px" height="94px" viewBox="0 0 160 94" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>编组 4</title>
+    <defs>
+        <linearGradient x1="68.919837%" y1="59.2856231%" x2="50%" y2="45.6411983%" id="linearGradient-1">
+            <stop stop-color="#FFFFFF" offset="0%"></stop>
+            <stop stop-color="#F0F0F0" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="67.5565403%" y1="61.3808275%" x2="54.8303464%" y2="48.1168216%" id="linearGradient-2">
+            <stop stop-color="#EBEBEB" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" offset="54.1762984%"></stop>
+            <stop stop-color="#D4D4D4" offset="100%"></stop>
+            <stop stop-color="#D4D4D4" offset="100%"></stop>
+        </linearGradient>
+        <path d="M159.007636,0.000699777143 L112.740043,82.6988818 L0,93.069904 C26.5785793,86.4214329 55.5903558,74.3376866 87.0353295,56.8186651 C118.480303,39.2996436 142.471072,20.3603219 159.007636,0.000699777143 Z" id="path-3"></path>
+        <filter x="-1.3%" y="-2.1%" width="102.5%" height="104.3%" filterUnits="objectBoundingBox" id="filter-4">
+            <feGaussianBlur stdDeviation="1.5" in="SourceAlpha" result="shadowBlurInner1"></feGaussianBlur>
+            <feOffset dx="-1" dy="0" in="shadowBlurInner1" result="shadowOffsetInner1"></feOffset>
+            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.0601781031 0" type="matrix" in="shadowInnerInner1"></feColorMatrix>
+        </filter>
+        <text id="text-5" font-family="SourceHanSansCN-Bold, Source Han Sans CN" font-size="34" font-weight="bold" letter-spacing="1" fill="#04613C">
+            <tspan x="47.5076362" y="76.069904">经典版</tspan>
+        </text>
+        <filter x="-5.2%" y="-10.3%" width="110.5%" height="132.4%" filterUnits="objectBoundingBox" id="filter-6">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="1.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.105882353   0 0 0 0 0.482352941   0 0 0 0 0.333333333  0 0 0 0.121722028 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="pad" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="首页1" transform="translate(-1760.000000, -1106.000000)">
+            <g id="编组-4" transform="translate(1760.992364, 1106.930096)">
+                <path d="M159.007636,0 L159.007636,93.069904 L7.04858394e-12,93.069904 C16.6297986,66.6701135 37.9403858,45.5694202 63.9317616,29.7678242 C89.9231375,13.9662282 121.615096,4.0436201 159.007636,0 Z" id="矩形" fill="url(#linearGradient-1)"></path>
+                <g id="矩形备份-3" transform="translate(79.503818, 46.535302) rotate(-180.000000) translate(-79.503818, -46.535302) ">
+                    <use fill="url(#linearGradient-2)" fill-rule="evenodd" xlink:href="#path-3"></use>
+                    <use fill="black" fill-opacity="1" filter="url(#filter-4)" xlink:href="#path-3"></use>
+                </g>
+                <g id="关怀版" fill="#04613C" fill-opacity="1">
+                    <use filter="url(#filter-6)" xlink:href="#text-5"></use>
+                    <use xlink:href="#text-5"></use>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

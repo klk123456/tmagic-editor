@@ -24,21 +24,31 @@ export default [
         text: '文本',
         type: 'text',
       },
-      {
-        icon: SwitchButton,
-        text: '按钮',
-        type: 'button',
-      },
+      // {
+      //   icon: SwitchButton,
+      //   text: '按钮',
+      //   type: 'button',
+      // },
       {
         icon: PictureFilled,
         text: '图片',
         type: 'img',
       },
-      {
-        icon: Grid,
-        text: '二维码',
-        type: 'qrcode',
-      },
+      // {
+      //   icon: Grid,
+      //   text: '二维码',
+      //   type: 'qrcode',
+      // },
+      // {
+      //   icon: Grid,
+      //   text: '步骤',
+      //   type: 'steps',
+      // },
+      // {
+      //   icon: Tickets,
+      //   text: '测试组件',
+      //   type: 'test',
+      // },
     ],
   },
   {
@@ -77,6 +87,86 @@ export default [
             },
           ],
         },
+      },
+    ],
+  },
+  {
+    title: '基础组件',
+    items: [
+      {
+        icon: Tickets,
+        text: 'ul',
+        type: 'ul',
+      },
+      {
+        icon: Tickets,
+        text: 'ol',
+        type: 'ol',
+      },
+      {
+        icon: Tickets,
+        text: 'li',
+        type: 'li',
+      },
+    ],
+  },
+  {
+    title: '自定义组件',
+    items: [
+      {
+        icon: Tickets,
+        text: '底部按钮',
+        type: 'bottombutton',
+      },
+      {
+        icon: Tickets,
+        text: '定时器',
+        type: 'pagetimer',
+      },
+      // {
+      //   icon: Tickets,
+      //   text: 'sound',
+      //   type: 'sound11',
+      // },
+      {
+        icon: Tickets,
+        text: '导航栏',
+        type: 'navigation',
+      },
+      {
+        icon: Tickets,
+        text: '容器',
+        type: 'framecontent',
+      },
+      {
+        icon: Tickets,
+        text: '呼叫',
+        type: 'callmanager',
+      },
+      {
+        icon: Tickets,
+        text: '返回主页',
+        type: 'backhome',
+      },
+      {
+        icon: Tickets,
+        text: '图片背景',
+        type: 'bgcontent',
+      },
+      {
+        icon: Tickets,
+        text: '轮播图',
+        type: 'carousel',
+      },
+      {
+        icon: Tickets,
+        text: '进度条',
+        type: 'progress',
+      },
+      {
+        icon: Tickets,
+        text: '选中框',
+        type: 'select_div',
       },
     ],
   },

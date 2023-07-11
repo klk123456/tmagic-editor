@@ -1,13 +1,13 @@
 <template>
   <el-radio-group size="small" v-model="viewerDevice" :class="viewerDevice" @change="deviceSelect">
+    <el-radio-button label="pc">PC</el-radio-button>
     <el-radio-button label="phone">Phone</el-radio-button>
     <el-radio-button label="pad">Pad</el-radio-button>
-    <el-radio-button label="pc">PC</el-radio-button>
   </el-radio-group>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, nextTick, ref } from 'vue';
 
 import { editorService } from '@tmagic/editor';
 
@@ -20,13 +20,13 @@ enum DeviceType {
 const devH: Record<DeviceType, number> = {
   phone: 817,
   pad: 1024,
-  pc: 900,
+  pc: 1024,
 };
 
 const devW: Record<DeviceType, number> = {
   phone: 375,
   pad: 768,
-  pc: 1600,
+  pc: 1280,
 };
 
 const getDeviceHeight = (viewerDevice: DeviceType) => devH[viewerDevice];
@@ -49,25 +49,31 @@ export default defineComponent({
   setup(props, { emit }) {
     const calcFontsize = (width: number) => {
       const iframe = editorService.get('stage')?.renderer.iframe;
+      // console.log(iframe);
+
       if (!iframe?.contentWindow) return;
+      if (!iframe?.contentWindow.appInstance) return;
       iframe.contentWindow.appInstance.designWidth = width;
     };
 
     const viewerDevice = ref(DeviceType.Phone);
+    function deviceSelect(device: DeviceType) {
+      const width = getDeviceWidth(device);
+      const height = getDeviceHeight(device);
+      emit('update:modelValue', {
+        width,
+        height,
+      });
+      calcFontsize(width);
+    }
+    // nextTick(() => {
+    //   viewerDevice.value = DeviceType.PC;
+    //   deviceSelect(viewerDevice.value);
+    // });
 
     return {
       viewerDevice,
-
-      deviceSelect(device: DeviceType) {
-        const width = getDeviceWidth(device);
-        const height = getDeviceHeight(device);
-        emit('update:modelValue', {
-          width,
-          height,
-        });
-
-        calcFontsize(width);
-      },
+      deviceSelect,
     };
   },
 });

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="80px" height="80px" viewBox="0 0 80 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>银行卡</title>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#FFFFFF" stop-opacity="0.544717002" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0.854676573" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="pad" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="个人解挂1" transform="translate(-981.000000, -450.000000)" fill-rule="nonzero">
+            <g id="银行卡" transform="translate(981.000000, 450.000000)">
+                <rect id="矩形" fill="#000000" opacity="0" x="0" y="0" width="80" height="80"></rect>
+                <path d="M75,20 L75,25 L5,25 L5,20 C5,17.25 7.25,15 10,15 L70,15 C72.75,15 75,17.25 75,20 Z M75,30 L75,60 C75,62.75 72.75,65 70,65 L10,65 C7.25,65 5,62.75 5,60 L5,30 L75,30 Z M20,50 L10,50 L10,52.5 L20,52.5 L20,50 Z M30,45 L10,45 L10,47.5 L30,47.5 L30,45 Z" id="形状" fill="url(#linearGradient-1)"></path>
+            </g>
+        </g>
+    </g>
+</svg>

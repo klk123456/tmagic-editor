@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="160px" height="132px" viewBox="0 0 160 132" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>银行卡认证</title>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#89E3D8" offset="0%"></stop>
+            <stop stop-color="#3AB89A" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="98.361014%" id="linearGradient-2">
+            <stop stop-color="#89E3D8" stop-opacity="0.332850743" offset="0%"></stop>
+            <stop stop-color="#3AB89A" stop-opacity="0.283817745" offset="100%"></stop>
+        </linearGradient>
+        <rect id="path-3" x="0" y="11" width="127" height="108" rx="20"></rect>
+        <filter x="-12.2%" y="-19.0%" width="132.3%" height="138.0%" filterUnits="objectBoundingBox" id="filter-4">
+            <feOffset dx="5" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="6" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.153135927 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <linearGradient x1="92.9885301%" y1="50.2907419%" x2="4.13751653%" y2="49.468557%" id="linearGradient-5">
+            <stop stop-color="#E8FFFB" offset="0%"></stop>
+            <stop stop-color="#CCFEF6" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="pad" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="公共页面-选择认证方式" transform="translate(-450.000000, -604.000000)">
+            <g id="银行卡认证" transform="translate(457.000000, 605.000000)">
+                <rect id="矩形" stroke="#A8EADF" fill="url(#linearGradient-1)" x="26.5" y="0.5" width="126" height="107" rx="20"></rect>
+                <g id="矩形备份-5">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-4)" xlink:href="#path-3"></use>
+                    <rect stroke="#A8EADF" stroke-width="1" stroke-linejoin="square" fill="url(#linearGradient-2)" fill-rule="evenodd" x="0.5" y="11.5" width="126" height="107" rx="20"></rect>
+                </g>
+                <rect id="矩形" fill="url(#linearGradient-5)" x="0" y="41" width="127" height="17"></rect>
+                <polygon id="矩形" fill="#E0FEFA" points="77.3377194 89 85.3377194 89 78 107 70 107"></polygon>
+                <polygon id="矩形备份-6" fill="#E0FEFA" points="90.3377194 89 98.3377194 89 91 107 83 107"></polygon>
+                <polygon id="矩形备份-7" fill="#E0FEFA" points="102.337719 89 115.886107 89 108.548387 107 95 107"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>

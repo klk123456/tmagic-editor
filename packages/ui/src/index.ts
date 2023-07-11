@@ -16,13 +16,29 @@
  * limitations under the License.
  */
 
+import BackHome from './back_home';
+import BgContent from './bg_content';
+import Bootombutton from './bottom_button';
 import Button from './button';
+import CallManager from './call_manager';
+import Carousel from './carousel';
 import Container from './container';
+import FrameContent from './frame_content';
 import Img from './img';
+import Navigation from './navigation';
 import Overlay from './overlay';
 import Page from './page';
+import PageTimer from './pagetimer';
 import Qrcode from './qrcode';
+// import Sound from './sound';
+import Steps from './steps';
+import Test from './test-component';
 import Text from './text';
+import Progress from './progress';
+import Ul from './ul';
+import Li from './li';
+import Ol from './ol';
+import selectDiv from './select_div';
 
 const ui: Record<string, any> = {
   page: Page,
@@ -32,6 +48,21 @@ const ui: Record<string, any> = {
   img: Img,
   qrcode: Qrcode,
   overlay: Overlay,
+  steps: Steps,
+  test: Test,
+  bottombutton: Bootombutton,
+  pagetimer: PageTimer,
+  backhome: BackHome,
+  framecontent: FrameContent,
+  bgcontent: BgContent,
+  callmanager: CallManager,
+  navigation: Navigation,
+  carousel: Carousel,
+  progress: Progress,
+  ul: Ul,
+  ol: Ol,
+  li: Li,
+  select_div: selectDiv
 };
 
 export default ui;

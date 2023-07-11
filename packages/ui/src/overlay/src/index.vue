@@ -25,9 +25,9 @@ export default defineComponent({
   },
 
   setup(props) {
-    const visible = ref(false);
     const app: Core | undefined = useApp(props);
     const node = app?.page?.getNode(props.config.id);
+    const visible = ref(false);
 
     const openOverlay = () => {
       visible.value = true;

@@ -23,5 +23,6 @@ export default {
   style: {
     width: '100',
     height: 'auto',
+    lineHeight: 'initial'
   },
 };
