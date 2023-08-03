@@ -1,17 +1,17 @@
 <template>
-  <component class="tmagic-design-scrollbar" :is="uiComponent.component" v-bind="uiProps">
+  <component class="tmagic-design-scrollbar" :is="uiComponent">
     <slot></slot>
   </component>
 </template>
 
-<script setup lang="ts" name="TMScrollbar">
-import { computed } from 'vue';
-
+<script setup lang="ts">
 import { getConfig } from './config';
 
-const props = defineProps();
+defineOptions({
+  name: 'TMScrollbar',
+});
 
-const uiComponent = getConfig('components').scrollbar;
+const ui = getConfig('components')?.scrollbar;
 
-const uiProps = computed(() => uiComponent.props(props));
+const uiComponent = ui?.component || 'el-scrollbar';
 </script>

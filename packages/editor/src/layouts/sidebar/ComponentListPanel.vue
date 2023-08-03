@@ -3,14 +3,7 @@
     <slot name="component-list-panel-header"></slot>
 
     <TMagicCollapse class="ui-component-panel" :model-value="collapseValue">
-      <TMagicInput
-        placeholder="输入关键字进行过滤"
-        class="search-input"
-        size="small"
-        clearable
-        :prefix-icon="Search"
-        v-model="searchText"
-      />
+      <SearchInput @search="filterTextChangeHandler"></SearchInput>
       <template v-for="(group, index) in list">
         <TMagicCollapseItem v-if="group.items && group.items.length" :key="index" :name="`${index}`">
           <template #title><MIcon :icon="Grid"></MIcon>{{ group.title }}</template>
@@ -38,18 +31,28 @@
   </TMagicScrollbar>
 </template>
 
-<script lang="ts" setup name="MEditorComponentListPanel">
+<script lang="ts" setup>
 import { computed, inject, ref } from 'vue';
-import { Grid, Search } from '@element-plus/icons-vue';
+import { Grid } from '@element-plus/icons-vue';
 import serialize from 'serialize-javascript';
 
-import { TMagicCollapse, TMagicCollapseItem, TMagicInput, TMagicScrollbar, TMagicTooltip } from '@tmagic/design';
+import { TMagicCollapse, TMagicCollapseItem, TMagicScrollbar, TMagicTooltip } from '@tmagic/design';
 import { removeClassNameByClassName } from '@tmagic/utils';
 
-import MIcon from '../../components/Icon.vue';
-import type { ComponentGroup, ComponentItem, Services, StageOptions } from '../../type';
+import MIcon from '@editor/components/Icon.vue';
+import SearchInput from '@editor/components/SearchInput.vue';
+import type { ComponentGroup, ComponentItem, Services, StageOptions } from '@editor/type';
+
+defineOptions({
+  name: 'MEditorComponentListPanel',
+});
 
 const searchText = ref('');
+
+const filterTextChangeHandler = (v: string) => {
+  searchText.value = v;
+};
+
 const services = inject<Services>('services');
 const stageOptions = inject<StageOptions>('stageOptions');
 
@@ -80,14 +83,13 @@ const appendComponent = ({ text, type, data = {} }: ComponentItem): void => {
 
 const dragstartHandler = ({ text, type, data = {} }: ComponentItem, e: DragEvent) => {
   if (e.dataTransfer) {
-    e.dataTransfer.effectAllowed = 'move';
     e.dataTransfer.setData(
-      'data',
+      'text/json',
       serialize({
         name: text,
         type,
         ...data,
-      }).replace(/"(\w+)":\s/g, '$1: '),
+      }),
     );
   }
 };
@@ -118,6 +120,6 @@ const dragHandler = (e: DragEvent) => {
 
   if (timeout || !stage.value) return;
 
-  timeout = stage.value.getAddContainerHighlightClassNameTimeout(e);
+  timeout = stage.value.delayedMarkContainer(e);
 };
 </script>

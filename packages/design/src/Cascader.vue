@@ -2,39 +2,30 @@
   <component
     ref="cascader"
     class="tmagic-design-cascader"
-    :is="uiComponent.component"
+    :is="uiComponent"
     v-bind="uiProps"
     @update:modelValue="updateModelValue"
     @change="changeHandler"
   ></component>
 </template>
 
-<script setup lang="ts" name="TMCascader">
+<script setup lang="ts">
 import { computed, ref } from 'vue';
 
 import { getConfig } from './config';
-import { CascaderOption } from './type';
+import { CascaderProps } from './types';
 
-const props = defineProps<{
-  modelValue?: any;
-  placeholder?: string;
-  disabled?: boolean;
-  clearable?: boolean;
-  filterable?: boolean;
-  options?: CascaderOption[];
-  size?: 'large' | 'default' | 'small';
-  props: {
-    expandTrigger?: 'click' | 'hover';
-    multiple?: boolean;
-    checkStrictly?: boolean;
-    emitPath?: boolean;
-    lazy?: boolean;
-  };
-}>();
+defineOptions({
+  name: 'TMCascader',
+});
 
-const uiComponent = getConfig('components').cascader;
+const props = defineProps<CascaderProps>();
 
-const uiProps = computed(() => uiComponent.props(props));
+const ui = getConfig('components')?.cascader;
+
+const uiComponent = ui?.component || 'el-cascader';
+
+const uiProps = computed(() => ui?.props(props) || props);
 
 const cascader = ref<any>();
 

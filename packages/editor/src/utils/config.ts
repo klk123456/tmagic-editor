@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { InstallOptions } from '../type';
+import { InstallOptions } from '@editor/type';
 
 let $TMAGIC_EDITOR: InstallOptions = {} as any;
 
@@ -24,6 +24,6 @@ const setConfig = (option: InstallOptions): void => {
   $TMAGIC_EDITOR = option;
 };
 
-const getConfig = (key: keyof InstallOptions): unknown => $TMAGIC_EDITOR[key];
+const getConfig = <K extends keyof InstallOptions>(key: K): InstallOptions[K] => $TMAGIC_EDITOR[key];
 
 export { getConfig, setConfig };

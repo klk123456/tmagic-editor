@@ -18,20 +18,26 @@
     @keypress="inputHandler"
     @change="changeHandler"
     @update:modelValue="updateModelValue"
-  ></TInput>
+  >
+    <template #prefix-icon v-if="$slots.prefix">
+      <slot name="prefix"></slot>
+    </template>
+    <template #suffix v-if="$slots.suffix">
+      <slot name="suffix"></slot>
+    </template>
+  </TInput>
 </template>
 
 <script lang="ts" setup>
 import { Input as TInput, Textarea as TTextarea } from 'tdesign-vue-next';
 
-defineProps<{
-  modelValue?: string;
-  clearable?: boolean;
-  disabled?: boolean;
-  placeholder?: string;
-  type?: string;
-  size?: 'large' | 'default' | 'small';
-}>();
+import type { InputProps } from '@tmagic/design';
+
+defineProps<
+  InputProps & {
+    modelValue: string;
+  }
+>();
 
 const emit = defineEmits(['change', 'input', 'update:modelValue']);
 

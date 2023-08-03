@@ -1,7 +1,7 @@
 <template>
   <component
     class="tmagic-design-input"
-    :is="uiComponent.component"
+    :is="uiComponent"
     v-bind="uiProps"
     @change="changeHandler"
     @input="inputHandler"
@@ -13,26 +13,32 @@
     <template #append v-if="$slots.append">
       <slot name="append"></slot>
     </template>
+    <template #prefix v-if="$slots.prefix">
+      <slot name="prefix"></slot>
+    </template>
+    <template #suffix v-if="$slots.suffix">
+      <slot name="suffix"></slot>
+    </template>
   </component>
 </template>
 
-<script setup lang="ts" name="TMInput">
+<script setup lang="ts">
 import { computed } from 'vue';
 
 import { getConfig } from './config';
+import type { InputProps } from './types';
 
-const props = defineProps<{
-  modelValue?: string | number;
-  clearable?: boolean;
-  disabled?: boolean;
-  placeholder?: string;
-  type?: string;
-  size?: 'large' | 'default' | 'small';
-}>();
+defineOptions({
+  name: 'TMInput',
+});
 
-const uiComponent = getConfig('components').input;
+const props = defineProps<InputProps>();
 
-const uiProps = computed(() => uiComponent.props(props));
+const ui = getConfig('components')?.input;
+
+const uiComponent = ui?.component || 'el-input';
+
+const uiProps = computed(() => ui?.props(props) || props);
 
 const emit = defineEmits(['change', 'input', 'update:modelValue']);
 

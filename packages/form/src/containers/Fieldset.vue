@@ -10,6 +10,7 @@
         :prop="`${prop}${prop ? '.' : ''}${config.name}.value`"
         :true-label="1"
         :false-label="0"
+        @update:modelValue="change"
         ><span v-html="config.legend"></span><span v-if="config.extra" v-html="config.extra" class="m-form-tip"></span
       ></TMagicCheckbox>
     </component>
@@ -60,14 +61,18 @@
   </fieldset>
 </template>
 
-<script lang="ts" setup name="MFormFieldset">
-import { computed, inject, watch } from 'vue';
+<script lang="ts" setup>
+import { computed, inject } from 'vue';
 
 import { TMagicCheckbox } from '@tmagic/design';
 
 import { FieldsetConfig, FormState } from '../schema';
 
 import Container from './Container.vue';
+
+defineOptions({
+  name: 'MFormFieldset',
+});
 
 const props = withDefaults(
   defineProps<{
@@ -115,13 +120,5 @@ const change = () => {
 
 const key = (item: any, index: number) => item[mForm?.keyProp || '__key'] ?? index;
 
-if (props.config.checkbox && name.value) {
-  watch(
-    () => props.model[name.value]?.value,
-    () => {
-      emit('change', props.model);
-    },
-  );
-}
 const onAddDiffCount = () => emit('addDiffCount');
 </script>

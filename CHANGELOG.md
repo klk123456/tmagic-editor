@@ -1,3 +1,236 @@
+# [1.3.0-alpha.13](https://github.com/Tencent/tmagic-editor/compare/v1.3.0-alpha.12...v1.3.0-alpha.13) (2023-07-10)
+
+
+### Features
+
+* **editor:** 代码块删除新增确认 ([8e82d38](https://github.com/Tencent/tmagic-editor/commit/8e82d38bbb4fade53d881f8b11b5bed2d2fb7567))
+* **editor:** 组件选择器点击已选择组件由重新选择改成选择组件 ([07cd306](https://github.com/Tencent/tmagic-editor/commit/07cd3065b2517c22a04ff3e6dc16243b582d9400))
+* **stage:** 新增清除高亮方法 ([ee3ad63](https://github.com/Tencent/tmagic-editor/commit/ee3ad63aa3065d1ba0fd28b81af1f2d6b245101b))
+
+
+
+# [1.3.0-alpha.12](https://github.com/Tencent/tmagic-editor/compare/v1.3.0-alpha.11...v1.3.0-alpha.12) (2023-07-07)
+
+
+### Bug Fixes
+
+* **editor:** 组件拖入画布出错 ([565881c](https://github.com/Tencent/tmagic-editor/commit/565881c8c9b1ff89b1f129530da1d1d92846990c)), closes [#524](https://github.com/Tencent/tmagic-editor/issues/524)
+
+
+
+# [1.3.0-alpha.11](https://github.com/Tencent/tmagic-editor/compare/v1.3.0-alpha.10...v1.3.0-alpha.11) (2023-07-06)
+
+
+
+# [1.3.0-alpha.10](https://github.com/Tencent/tmagic-editor/compare/v1.3.0-alpha.9...v1.3.0-alpha.10) (2023-07-06)
+
+
+### Bug Fixes
+
+* **design:** tDesign form 使用reset ([c9b9e76](https://github.com/Tencent/tmagic-editor/commit/c9b9e76514f2606dc60231568bf0ed182b26c1ff)), closes [#522](https://github.com/Tencent/tmagic-editor/issues/522)
+
+
+### Features
+
+* **cli:** 生成的entry文件里面的import使用相对路径 ([24bb45e](https://github.com/Tencent/tmagic-editor/commit/24bb45e2b95a246f53e82ecf0ada5269660d3593))
+* **editor,form:** 添加属性配置表单formState扩展函数prop ([fd53170](https://github.com/Tencent/tmagic-editor/commit/fd53170e59179f51c16f6908d8f817c6f77e96a1))
+* **editor:** 新增右键菜单移动至其他页面功能 ([434bf2e](https://github.com/Tencent/tmagic-editor/commit/434bf2ed70b8261eb669ea39eab99fab29ecff46))
+* **editor:** 点击画布区域聚焦，使得能使用画布的快捷键 ([9d24069](https://github.com/Tencent/tmagic-editor/commit/9d24069dcd75d2fc27bfd84aeda9d204d2e68762))
+* **stage): feat(stage:** 新增获取moveable配置的方法 ([1710168](https://github.com/Tencent/tmagic-editor/commit/17101687bfbaa852f93a3b8c6856e13d916294cf)), closes [#521](https://github.com/Tencent/tmagic-editor/issues/521)
+
+
+
+# [1.3.0-alpha.9](https://github.com/Tencent/tmagic-editor/compare/v1.3.0-alpha.8...v1.3.0-alpha.9) (2023-07-03)
+
+
+### Bug Fixes
+
+* **core:** 一个组件配置多个相同的事件销毁后没有能成功移除事件绑定 ([47c26ed](https://github.com/Tencent/tmagic-editor/commit/47c26ed189cee952871c479bad61861abd05a482))
+* **editor:** code-editor组件json类型序列化出错 ([2d4a6aa](https://github.com/Tencent/tmagic-editor/commit/2d4a6aa22a4d09aec9665cf4dfc7ba6dec275754))
+* **editor:** 代码编辑器只有在内容发生变化时才触发保存 ([5b3c700](https://github.com/Tencent/tmagic-editor/commit/5b3c700f0034de25e9f494598c6bcf1888073fc3))
+* **editor:** 添加代码块参数时出错 ([d480a03](https://github.com/Tencent/tmagic-editor/commit/d480a03369820e7d106d2e7d2a7fad24d8f8eace))
+* **editor:** 组件树上的节点拖动画布中出错，应该不响应 ([d8d9184](https://github.com/Tencent/tmagic-editor/commit/d8d9184f3f5dda40b3fa4b49efecde4cdbcfd73f)), closes [#519](https://github.com/Tencent/tmagic-editor/issues/519)
+
+
+### Features
+
+* **editor, core:** 支持直接绑定整个数据源对象 ([74c9dea](https://github.com/Tencent/tmagic-editor/commit/74c9deaa29ba1fb6bd14486b17f68f8c8ab5afce))
+* **editor,ui:** 新增显示隐藏组件功能 ([42b0436](https://github.com/Tencent/tmagic-editor/commit/42b043670e7fbb0cf293faadb5f2a8cb24a7dfa5)), closes [#516](https://github.com/Tencent/tmagic-editor/issues/516)
+
+
+
+# [1.3.0-alpha.8](https://github.com/Tencent/tmagic-editor/compare/v1.3.0-alpha.7...v1.3.0-alpha.8) (2023-06-27)
+
+
+### Bug Fixes
+
+* **editor:** 没有页面时隐藏属性面板 ([91e4680](https://github.com/Tencent/tmagic-editor/commit/91e46800244eaa1cbd0b05712380388ea243dd7b))
+* **editor:** 组件树右键菜单支持多选 ([1660e94](https://github.com/Tencent/tmagic-editor/commit/1660e941d7e1e1597725b2131885c0d14f358f65))
+
+
+### Features
+
+* **editor,core:** 数据源模板改成使用 ES 分隔符 ([b952e6e](https://github.com/Tencent/tmagic-editor/commit/b952e6efd1e096b47f7f32b938cd5ae6975fc4bf))
+* **editor:** 导出Resizer组件 ([fbf3896](https://github.com/Tencent/tmagic-editor/commit/fbf3896878709343651401f237ff14d9ae6ccd3c))
+* **editor:** 属性样式添加边框 ([4daf6b4](https://github.com/Tencent/tmagic-editor/commit/4daf6b441034b354a5e0ebb984cf7ffa30d22fce))
+
+
+
+# [1.3.0-alpha.7](https://github.com/Tencent/tmagic-editor/compare/v1.3.0-alpha.6...v1.3.0-alpha.7) (2023-06-19)
+
+
+### Bug Fixes
+
+* **editor:** 异常处理 ([b37568b](https://github.com/Tencent/tmagic-editor/commit/b37568b440a87cf8804232c87c8fbeefc498cce3))
+* **editor:** 支持多层右键菜单 ([1f55272](https://github.com/Tencent/tmagic-editor/commit/1f5527270cc780f6efe0be542e4b87e7961680b7))
+* **form:** group-list默认展开 ([8ca6b3f](https://github.com/Tencent/tmagic-editor/commit/8ca6b3fbe4a305ba3c74b48090e05096a63fef35))
+
+
+### Features
+
+* **editor:** 完善快捷键注册机制 ([9716ace](https://github.com/Tencent/tmagic-editor/commit/9716aceabf5b587ad4412499cab2b55ad968a251))
+* **editor:** 新增parseDSL配置，用于解析DSL，默认使用eval ([2b881c3](https://github.com/Tencent/tmagic-editor/commit/2b881c386316258aa9ccf89b5bd2328c4a9c8b18))
+
+
+
+# [1.3.0-alpha.6](https://github.com/Tencent/tmagic-editor/compare/v1.3.0-alpha.5...v1.3.0-alpha.6) (2023-06-12)
+
+
+### Bug Fixes
+
+* **runtime:** resetcss不生效 ([567b054](https://github.com/Tencent/tmagic-editor/commit/567b054b32c344af1b5ad25615da09de027966ef))
+* **utils:** 容器发生更新，需要编译子组建配置 ([ed4b3c7](https://github.com/Tencent/tmagic-editor/commit/ed4b3c77ef468289f5b24030a9cf3a514408a8c3)), closes [#512](https://github.com/Tencent/tmagic-editor/issues/512)
+
+
+### Features
+
+* **app,utils,runtime:** 将resetcss.css移到utils,在runtime中引入 ([01d1dcc](https://github.com/Tencent/tmagic-editor/commit/01d1dccbb65eb3c77c1caeff69e6c83610b4409a))
+* **editor:** 优化工作区间大小拖动体验 ([da18842](https://github.com/Tencent/tmagic-editor/commit/da18842e42456b7cba55c8c0dc69c0b197ecf738))
+* **editor:** 优化快捷键操作 ([06d289a](https://github.com/Tencent/tmagic-editor/commit/06d289aff33221615def85aca6f2954200bb5eb7))
+* **ui:** text使用p渲染 ([391fcee](https://github.com/Tencent/tmagic-editor/commit/391fceef30db5e771323adc20330b8529308eaad))
+
+
+
+# [1.3.0-alpha.5](https://github.com/Tencent/tmagic-editor/compare/v1.3.0-alpha.4...v1.3.0-alpha.5) (2023-06-06)
+
+
+### Features
+
+* **editor:** 添加几个slot ([97101f1](https://github.com/Tencent/tmagic-editor/commit/97101f18a6e2b86ca8c293f6af77069681a85ced))
+
+
+
+# [1.3.0-alpha.4](https://github.com/Tencent/tmagic-editor/compare/v1.3.0-alpha.3...v1.3.0-alpha.4) (2023-05-30)
+
+
+### Bug Fixes
+
+* **design:** 默认props ([05dfd9d](https://github.com/Tencent/tmagic-editor/commit/05dfd9d9361c77e573eca61d674ac28930645776))
+
+
+### Features
+
+* **editor:** 事件配置默认展开全部 ([256a958](https://github.com/Tencent/tmagic-editor/commit/256a9586d73fc53ab9ff0018d7fb8fba3dd6491a))
+* **editor:** 代码块配置默认全部展开 ([e83cf32](https://github.com/Tencent/tmagic-editor/commit/e83cf322b5099e2ecd6b77605dea4145a6b33e88))
+* **form:** groupList新增默认展开所有的配置 ([9281d06](https://github.com/Tencent/tmagic-editor/commit/9281d067234ceb24e0712901ed27984e8e6c60ba))
+
+
+
+# [1.3.0-alpha.3](https://github.com/Tencent/tmagic-editor/compare/v1.2.15...v1.3.0-alpha.3) (2023-05-30)
+
+
+### Bug Fixes
+
+* **design:** button 判断默认slot ([a97523e](https://github.com/Tencent/tmagic-editor/commit/a97523e800a0530fd8241b88173eba4a55881458))
+* **editor:** 数据源模板输入框初始化显示问题 ([668991d](https://github.com/Tencent/tmagic-editor/commit/668991de264e498569018b496e49763a34888e82))
+
+
+### Features
+
+* 完善tdesign-vue-next适配 ([24604c9](https://github.com/Tencent/tmagic-editor/commit/24604c9d36feb716a1f4c384f17fa152aa0b3c12))
+* 新增数据源 ([aac478e](https://github.com/Tencent/tmagic-editor/commit/aac478eebc609050e57c85f5945250daed14ff00))
+
+
+
+## [1.2.15](https://github.com/Tencent/tmagic-editor/compare/v1.2.14...v1.2.15) (2023-04-26)
+
+
+### Bug Fixes
+
+* **design:** drawer v-model失效 ([fded83e](https://github.com/Tencent/tmagic-editor/commit/fded83ee0d8e141dda5ed177646665dfc1c9efee))
+* **form:** fieldset初始化时就触发了change事件 ([982cc46](https://github.com/Tencent/tmagic-editor/commit/982cc4685ec1aca07e6ebaab973e2be616562c01))
+* **ui:** model prop设置成可选 ([315e83d](https://github.com/Tencent/tmagic-editor/commit/315e83da190ac9eaa41fa20149925e0792148940))
+
+
+### Features
+
+* **form:** select支持clearable,filterable配置 ([af393e3](https://github.com/Tencent/tmagic-editor/commit/af393e34fb3782ad237cd5ca928ba57c1c4a003d))
+* **table:** action hook配置加入index参数 ([26835f6](https://github.com/Tencent/tmagic-editor/commit/26835f6a29a7586ab45240e9d3c9e5afa97252b0))
+* **util:** guid方法 ([0295d6f](https://github.com/Tencent/tmagic-editor/commit/0295d6f4b54ea90b51a3746a6f9137fd7068d42c))
+* 完善tdesign-vue-next适配 ([ea4af42](https://github.com/Tencent/tmagic-editor/commit/ea4af425f35e0ee9ad561b7ff26f047ece73000d))
+
+
+
+## [1.2.14](https://github.com/Tencent/tmagic-editor/compare/v1.2.13...v1.2.14) (2023-04-20)
+
+
+### Bug Fixes
+
+* **core:** node events 为空时，应为空数组 ([abcac71](https://github.com/Tencent/tmagic-editor/commit/abcac71826b2e8eaff36c97726448923d5853e3d)), closes [#500](https://github.com/Tencent/tmagic-editor/issues/500)
+* **playground,runtime:** 设备切换时，重新设置root font size与ua ([84e2cdf](https://github.com/Tencent/tmagic-editor/commit/84e2cdf22da1f376689e87fb05fe98f62db1e62a)), closes [#501](https://github.com/Tencent/tmagic-editor/issues/501)
+
+
+### Features
+
+* **core:** 重新设置designWidth时，应该重新计算root font size ([3d9f387](https://github.com/Tencent/tmagic-editor/commit/3d9f38781a059b29ec23d1947ae0574e57ffce32))
+* **editor:** 代码列表默认只展开第一层 ([41cd22b](https://github.com/Tencent/tmagic-editor/commit/41cd22b17f0d434016254cddda949651c21a65e3))
+* **editor:** 代码编辑交互优化 ([51dadab](https://github.com/Tencent/tmagic-editor/commit/51dadabc2c89403b772cf3aa1f5ed77f959c82e4))
+* **ui:** 修改useApp实现，与ui-react中保持一致 ([befaf67](https://github.com/Tencent/tmagic-editor/commit/befaf67ba74ec0ec1dc3683b26d0de10ee6b3cf0))
+
+
+
+## [1.2.13](https://github.com/Tencent/tmagic-editor/compare/v1.2.12...v1.2.13) (2023-03-30)
+
+
+### Bug Fixes
+
+* **editor:** 代码块code-block-panel-tool slot data丢失 ([aa12779](https://github.com/Tencent/tmagic-editor/commit/aa12779598ba94a56f26776a6dc1213ed5bb35dc))
+
+
+### Features
+
+* **design,element-plus-adapter,tdesign-vue-next-adapter:** 新增drawer ([1b5d3e5](https://github.com/Tencent/tmagic-editor/commit/1b5d3e564d8afe0bb2709ef9c14e8577592b2c9e))
+
+
+
+## [1.2.12](https://github.com/Tencent/tmagic-editor/compare/v1.2.11...v1.2.12) (2023-03-30)
+
+
+### Bug Fixes
+
+* **core:** style兼容hippy ([fb026a1](https://github.com/Tencent/tmagic-editor/commit/fb026a134ff74193a89519428a0185806c339b04))
+* **core:** 没有设置curPage，默认取第一个page ([44290b6](https://github.com/Tencent/tmagic-editor/commit/44290b65ba77b597304165acce46b94ceb7c40be))
+
+
+
+## [1.2.11](https://github.com/Tencent/tmagic-editor/compare/v1.2.10...v1.2.11) (2023-03-30)
+
+
+### Bug Fixes
+
+* **form:** table 移动列变成了交换 ([37045f7](https://github.com/Tencent/tmagic-editor/commit/37045f7201a48105a32e0371f27c69154393e777))
+* **form:** table可能出现两个extra ([0cac40e](https://github.com/Tencent/tmagic-editor/commit/0cac40eb316f83a5dcee8fbf627f97fb9af8a713))
+
+
+### Features
+
+* **core,runtime:** 删除App中pages，只留下当前page ([cfd2a6e](https://github.com/Tencent/tmagic-editor/commit/cfd2a6eee38bde7f723c27509a1cd9f57c3165ba))
+* **editor,form,core,schema:** 事件支持触发代码块 ([39468f3](https://github.com/Tencent/tmagic-editor/commit/39468f3b95749c424be84e4229c18fcd18ec9b54))
+* **editor:** 新增依赖收集器 ([35f9a59](https://github.com/Tencent/tmagic-editor/commit/35f9a59f442d50b195b14f91da26b6b314928f55))
+* **edtior:** 代码块使用依赖收集器改造 ([3b6ca97](https://github.com/Tencent/tmagic-editor/commit/3b6ca97f4ceeab215cb9d43b237159993bb6370b))
+
+
+
 ## [1.2.10](https://github.com/Tencent/tmagic-editor/compare/v1.2.9...v1.2.10) (2023-03-27)
 
 

@@ -2,7 +2,7 @@
   <component
     class="tmagic-design-table"
     ref="table"
-    :is="uiComponent.component"
+    :is="uiComponent"
     v-bind="uiProps"
     @select="selectHandler"
     @sort-change="sortChangeHandler"
@@ -13,26 +13,25 @@
   </component>
 </template>
 
-<script setup lang="ts" name="TMTable">
+<script setup lang="ts">
 import { computed, ref, watchEffect } from 'vue';
 
 import { getConfig } from './config';
+import type { TableProps } from './types';
 
-const props = withDefaults(
-  defineProps<{
-    data?: any[];
-    border?: boolean;
-    maxHeight?: number | string;
-    defaultExpandAll?: boolean;
-  }>(),
-  {
-    data: () => [],
-  },
-);
+defineOptions({
+  name: 'TMTable',
+});
 
-const uiComponent = getConfig('components').table;
+const props = withDefaults(defineProps<TableProps>(), {
+  data: () => [],
+});
 
-const uiProps = computed(() => uiComponent.props(props));
+const ui = getConfig('components')?.table;
+
+const uiComponent = ui?.component || 'el-table';
+
+const uiProps = computed(() => ui?.props(props) || props);
 
 const emit = defineEmits(['select', 'sort-change', 'expand-change', 'cell-click']);
 

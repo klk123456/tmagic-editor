@@ -1,21 +1,21 @@
 <template>
-  <div :class="['type_basic', { active: config.isActive }, { gray: config.isGray }]"
+  <div :class="['type_basic', { active: isActive }, { gray: isGray }]"
        @click="SignClick(config, id)">
     <div v-if="config.isSigned"
          :class="mask">
-      <div :class="['type_name', { active: config.isActive }, { gray: config.isGray }]">{{ config.typeName }}</div>
+      <div :class="['type_name', { active: isActive }, { gray: isGray }]">{{ config.typeName }}</div>
       <div v-show="config.isRead"
            class="agreement"
            @click.stop="ReadArgument(config, 'typeData')">协议</div>
-      <div v-if="config.isActive"
+      <div v-if="isActive"
            class="rb_icon"></div>
     </div>
     <template v-else>
-      <div :class="['type_name', { active: config.isActive }, { gray: config.isGray }]">{{ config.typeName }}</div>
+      <div :class="['type_name', { active: isActive }, { gray: isGray }]">{{ config.typeName }}</div>
       <div v-show="config.isRead"
            class="agreement"
            @click.stop="ReadArgument(config, 'typeData')">协议</div>
-      <div v-if="config.isActive"
+      <div v-if="isActive"
            class="rb_icon"></div>
     </template>
   </div>
@@ -41,11 +41,18 @@ export default {
       default: () => ({}),
     },
   },
+  watch: {
+    'config.isGray'(newValue, oldValue) {
+      console.log(newValue,oldValue);
+        this.isGray = newValue;
+    },
+    'config.isActive'(newValue, oldValue) {
+        this.isActive = newValue;
+    }
+  },
   methods: {
     ReadArgument (item, type) {
-      if(!this.isGray){
-        this.isActive = !this.isActive;
-      }
+      
       this.$refs.msgSignBox.Open();
       // 读取展示对应协议
       if (type === "typeData") {
@@ -58,6 +65,10 @@ export default {
       this.$refs.time.Stoptimer();
     },
     SignClick (item, i) {
+      if(!this.isGray){
+        this.isActive = !this.isActive
+        this.$emit('update:config', {...this.config,isActive:!this.isActive})
+      }
       if (wsap.pageInitJSONDATA.olderSignedItems[item.id] == "3") {
         this.$refs.msgBox.Open();
         // _this.PopMsg = "办理开户业务需同意账户类协议";

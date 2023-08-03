@@ -1,19 +1,24 @@
 <template>
-  <component class="tmagic-design-radio" :is="uiComponent.component" v-bind="uiProps">
+  <component class="tmagic-design-radio" :is="uiComponent" v-bind="uiProps">
     <slot></slot>
   </component>
 </template>
 
-<script setup lang="ts" name="TMRadio">
+<script setup lang="ts">
 import { computed } from 'vue';
 
 import { getConfig } from './config';
+import type { RadioProps } from './types';
 
-const props = defineProps<{
-  label?: string | number | boolean;
-}>();
+defineOptions({
+  name: 'TMRadio',
+});
 
-const uiComponent = getConfig('components').radio;
+const props = defineProps<RadioProps>();
 
-const uiProps = computed(() => uiComponent.props(props));
+const ui = getConfig('components')?.radio;
+
+const uiComponent = ui?.component || 'el-radio';
+
+const uiProps = computed(() => ui?.props(props) || props);
 </script>

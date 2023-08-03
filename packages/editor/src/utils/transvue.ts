@@ -28,13 +28,41 @@ export const transVue = function (json: MComponent) {
       "created",
       "items",
       "HyperText",
+      "atr",
+      "mounted",
+      "multiple"
     ]);
     // 基础组件不存在外层DIV包裹。
-    const base = new Set(["img","ul","li","ol"]);
+    const base = new Set([
+      "img",
+      "ul",
+      "li",
+      "ol",
+      "input",
+      "button",
+      "el-link",
+      "el-badge",
+      "div",
+      "el-card",
+      "el-tabs",
+      "el-tab-pane",
+      "el-menu",
+      "el-menu-item",
+      "el-cascader",
+      "el-option",
+      "el-select",
+      "el-date-picker",
+      "table",
+      "thead",
+      "tbody",
+      "th",
+      "tr",
+      "td"
+    ]);
     // 没有终止符的标签
-    const notEnd = new Set(["img"])
+    const notEnd = new Set(["img", "input"]);
     // 非字符型数据
-    const specialData = new Set(["isRemind"]);
+    const specialData = new Set(["isRemind", "isGray", "isActive", "isRead", "nums"]);
     // 有一些元素，虽然是纯数字，但是不能存在px作为单位，下列是对某些参数进行处理。
     const num = new Set(["fontWeight"]);
     // 组件封装出来的Data,总的Data包括多条数据
@@ -57,20 +85,25 @@ export const transVue = function (json: MComponent) {
           attr += `${key}:"${component[key]}",`;
         }
       });
-      attr += "}";
-
-      if (count.has(`config_${component.type}`)) {
-        const num = count.get(`config_${component.type}`);
-        count.set(`config_${component.type}`, num + 1);
-
-        propsName = `config_${component.type}${num}`;
-      } else {
-        count.set(`config_${component.type}`, 1);
-        propsName = `config_${component.type}`;
+      if(component.atr && component.atr['v-model']){
+        attr += `model : "${component.atr['v-model']}"`
       }
+      attr += "}";
+      if (attr != "{\n}") {
+        if (count.has(`config_${component.type}`)) {
+          const num = count.get(`config_${component.type}`);
+          count.set(`config_${component.type}`, num + 1);
 
-      // propsName = `config_${component.type}${no}`;
-      data += `${propsName}: ${attr},`;
+          propsName = `config_${component.type}${num}`;
+        } else {
+          count.set(`config_${component.type}`, 1);
+          propsName = `config_${component.type}`;
+        }
+
+        // propsName = `config_${component.type}${no}`;
+        // 属性不为空的时候才会加入到data中。
+        data += `${propsName}: ${attr},`;
+      }
     }
 
     // 读取class
@@ -92,12 +125,18 @@ export const transVue = function (json: MComponent) {
           });
           // 若有属性则添加
           if (value.length > 0) {
-            style += `  ${toLine(styleName)} : ${value};\n`;
+            style += `${toLine(styleName)}:${value};\n`;
           }
         } else {
-          style += `  ${toLine(styleName)} : ${
-            component.style ? component.style[styleName] + isNum : ""
-          };\n`;
+          if (styleName == "backgroundImage") {
+            style += `${toLine(styleName)}:${
+              component.style ? "'" + component.style[styleName] + "'" + isNum : ""
+            };\n`;
+          } else {
+            style += `${toLine(styleName)}:${
+              component.style ? component.style[styleName] + isNum : ""
+            };\n`;
+          }
         }
       }
     });
@@ -136,14 +175,25 @@ export const transVue = function (json: MComponent) {
       html += `<div ${domClass}> `;
     }
     // console.log(` ${component.HyperText == 'img' ? domClass : ''}`);
-
     html += component.HyperText
-      ? `<${component.HyperText} ${base.has(component.HyperText) ? domClass : ""} ${
-          component.HyperText == "img" ? ":src='" + propsName + ".src'" : ""
-        } id="${component.id}" :config="${propsName}">`
+      ? `<${component.HyperText} ${
+          base.has(component.HyperText) ? domClass : propsName ? ":config='" + propsName + "'" : ""
+        } ${component.HyperText == "img" ? ":src='" + propsName + ".src'" : " "} `
       : "";
 
-    /* 递归读取内部的items拼接到html的中间，例如<div>...<items></items>...</div>
+    // component的所有atr属性会已原名添加到基础组件属性中。
+    Object.keys(component.atr || {}).forEach((key) => {
+      if(key == 'v-model' && component.atr[key]){
+        html += `v-model="${propsName}.model"`
+      }
+      else if (component.atr[key] || component.atr[key] === false) {
+        html += `${key}="${component.atr[key]}" `;
+      }
+    });
+
+    html += component.HyperText ? `id="${component.id}" >` : "";
+
+    /* 递归读取内部的items拼接到html的中间，例如<div>...<items>...</items>...</div>
     同时递归取到items的style以及data,itemCreated也是函数调用的代码块,使用频率较少。*/
     if (component.items) {
       for (const deepItem of component.items) {
@@ -155,8 +205,8 @@ export const transVue = function (json: MComponent) {
       }
     }
     html += `${component.text ? `${component.text}` : ""}`;
-    if (component.HyperText && !notEnd.has(component.HyperText)){
-      html += `</${component.HyperText}>`
+    if (component.HyperText && !notEnd.has(component.HyperText)) {
+      html += `</${component.HyperText}>`;
     }
     if (!base.has(component.HyperText)) {
       html += "</div>";

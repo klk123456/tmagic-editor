@@ -1,19 +1,6 @@
+import { h } from 'vue';
 import {
-  ElDropdown,
-  ElDropdownItem,
-  ElDropdownMenu,
-  ElIcon,
-  ElMessageBox,
-  ElPagination,
-  ElPopover,
-  ElScrollbar,
-  ElTable,
-  ElTableColumn,
-  ElTabPane,
-  ElTabs,
-  ElTree,
-} from 'element-plus';
-import {
+  Badge as TBadge,
   Button as TButton,
   Card as TCard,
   Cascader as TCascader,
@@ -24,46 +11,128 @@ import {
   CollapsePanel as TCollapsePanel,
   ColorPicker as TColorPicker,
   Dialog as TDialog,
+  DialogPlugin,
   Divider as TDivider,
+  Drawer as TDrawer,
+  Dropdown as TDropdown,
+  DropdownItem as TDropdownItem,
   Form as TForm,
   FormItem as TFormItem,
   InputNumber as TInputNumber,
   MessagePlugin,
   Option as TOption,
   OptionGroup as TOptionGroup,
+  Pagination as TPagination,
+  Popup as TPopup,
   Radio as TRadio,
+  RadioButton as TRadioButton,
   RadioGroup as TRadioGroup,
   Row as TRow,
   Select as TSelect,
   StepItem as TStepItem,
   Steps as TSteps,
   Switch as TSwitch,
+  Table as TTable,
+  TabPanel as TTabPanel,
+  Tabs as TTabs,
   Tag as TTag,
   TimePicker as TTimePicker,
   Tooltip as TTooltip,
+  TreeNodeModel,
   Upload as TUpload,
 } from 'tdesign-vue-next';
 
+import type {
+  BadgeProps,
+  ButtonProps,
+  CardProps,
+  CascaderProps,
+  CheckboxGroupProps,
+  CheckboxProps,
+  CollapseItemProps,
+  CollapseProps,
+  ColorPickerProps,
+  ColProps,
+  DatePickerProps,
+  DialogProps,
+  DrawerProps,
+  DropdownItemProps,
+  DropdownProps,
+  FormItemProps,
+  FormProps,
+  InputNumberProps,
+  InputProps,
+  OptionGroupProps,
+  OptionProps,
+  PaginationProps,
+  PopoverProps,
+  RadioButtonProps,
+  RadioGroupProps,
+  RadioProps,
+  SelectProps,
+  StepProps,
+  StepsProps,
+  SwitchProps,
+  TableColumnProps,
+  TableProps,
+  TabPaneProps,
+  TabsProps,
+  TagProps,
+  TimePickerProps,
+  TooltipProps,
+  TreeProps,
+  UploadProps,
+} from '@tmagic/design';
+
 import DatePicker from './DatePicker.vue';
+import Icon from './Icon.vue';
 import Input from './Input.vue';
+import { vLoading } from './loading';
+import Scrollbar from './Scrollbar.vue';
+import TableColumn from './TableColumn.vue';
+import Tree from './Tree.vue';
 
 const adapter: any = {
   message: MessagePlugin,
-  messageBox: ElMessageBox,
+  messageBox: {
+    alert: (msg: string) => {
+      DialogPlugin.alert({
+        body: msg,
+      });
+    },
+    confirm: (msg: string) => {
+      DialogPlugin.confirm({
+        body: msg,
+      });
+    },
+    close: (msg: string) => {
+      console.log(msg);
+    },
+  },
+  loading: vLoading,
   components: {
+    badge: {
+      component: TBadge,
+      props: (props: BadgeProps) => ({
+        count: props.value,
+        dot: props.isDot,
+        maxCount: props.max,
+      }),
+    },
+
     button: {
       component: TButton,
-      props: (props: any) => ({
+      props: (props: ButtonProps) => ({
         theme: props.type,
         size: props.size === 'default' ? 'medium' : props.size,
-        icon: props.icon,
+        icon: () => (props.icon ? h(props.icon) : null),
         variant: props.text ? 'text' : 'base',
       }),
     },
 
     card: {
       component: TCard,
-      props: (props: any) => ({
+      props: (props: CardProps) => ({
         shadow: props.shadow !== 'never',
         hoverShadow: props.shadow === 'hover',
         header: props.header,
@@ -72,7 +141,7 @@ const adapter: any = {
 
     cascader: {
       component: TCascader,
-      props: (props: any) => ({
+      props: (props: CascaderProps) => ({
         modelValue: props.modelValue,
         placeholder: props.placeholder,
         disabled: props.disabled,
@@ -90,7 +159,7 @@ const adapter: any = {
 
     checkbox: {
       component: TCheckbox,
-      props: (props: any) => ({
+      props: (props: CheckboxProps) => ({
         modelValue: props.modelValue,
         label: props.label,
         value: props.value,
@@ -100,7 +169,7 @@ const adapter: any = {
 
     checkboxGroup: {
       component: TCheckboxGroup,
-      props: (props: any) => ({
+      props: (props: CheckboxGroupProps) => ({
         modelValue: props.modelValue,
         label: props.label,
         disabled: props.disabled,
@@ -109,14 +178,14 @@ const adapter: any = {
 
     col: {
       component: TCol,
-      props: (props: any) => ({
+      props: (props: ColProps) => ({
         span: props.span,
       }),
     },
 
     collapse: {
       component: TCollapse,
-      props: (props: any) => ({
+      props: (props: CollapseProps) => ({
         value: props.modelValue,
         expandIconPlacement: 'right',
       }),
@@ -124,7 +193,7 @@ const adapter: any = {
 
     collapseItem: {
       component: TCollapsePanel,
-      props: (props: any) => ({
+      props: (props: CollapseItemProps) => ({
         value: props.name,
         header: props.title,
         disabled: props.disabled,
@@ -133,7 +202,7 @@ const adapter: any = {
 
     colorPicker: {
       component: TColorPicker,
-      props: (props: any) => ({
+      props: (props: ColorPickerProps) => ({
         modelValue: props.modelValue,
         disabled: props.disabled,
         size: props.size === 'default' ? 'medium' : props.size,
@@ -144,12 +213,12 @@ const adapter: any = {
 
     datePicker: {
       component: DatePicker,
-      props: (props: any) => props,
+      props: (props: DatePickerProps) => props,
     },
 
     dialog: {
       component: TDialog,
-      props: (props: any) => ({
+      props: (props: DialogProps) => ({
         visible: props.modelValue,
         attach: props.appendToBody ? 'body' : '',
         header: props.title,
@@ -167,24 +236,56 @@ const adapter: any = {
       }),
     },
 
+    drawer: {
+      component: TDrawer,
+      props: (props: DrawerProps) => ({
+        visible: props.modelValue,
+        size: props.size,
+        closeOnEscKeydown: props.closeOnPressEscape,
+        closeOnOverlayClick: props.closeOnClickModal,
+        attach: props.appendToBody ? 'body' : undefined,
+        placement: {
+          rtl: 'right',
+          ltr: 'left',
+          ttb: 'top',
+          bt: 'bottom',
+        }[props.direction as string],
+      }),
+    },
+
     dropdown: {
-      component: ElDropdown,
-      props: (props: any) => props,
+      component: TDropdown,
+      props: (props: DropdownProps) => ({
+        maxHeight: props.maxHeight,
+        disabled: props.disable,
+        direction: props.placement,
+        trigger: props.trigger,
+        hideAfterItemClick: props.hideOnClick,
+        popupProps: {
+          overlayClassName: props.popperClass,
+          ...(props.popperOptions || {}),
+        },
+      }),
     },
 
     dropdownItem: {
-      component: ElDropdownItem,
-      props: (props: any) => props,
+      component: TDropdownItem,
+      props: (props: DropdownItemProps) => ({
+        disabled: props.disabled,
+        divider: props.divided,
+        prefixIcon: props.icon && (() => h(props.icon)),
+        onClick: props.command?.(),
+      }),
     },
 
     dropdownMenu: {
-      component: ElDropdownMenu,
-      props: (props: any) => props,
+      component: TDropdown,
+      props: () => ({}),
     },
 
     form: {
       component: TForm,
-      props: (props: any) => ({
+      props: (props: FormProps) => ({
         data: props.model,
         labelWidth: props.labelWidth,
         disabled: props.disabled,
@@ -195,7 +296,7 @@ const adapter: any = {
 
     formItem: {
       component: TFormItem,
-      props: (props: any) => ({
+      props: (props: FormItemProps) => ({
         labelWidth: props.labelWidth,
         name: props.prop,
         rules: props.rules,
@@ -203,18 +304,18 @@ const adapter: any = {
     },
 
     icon: {
-      component: ElIcon,
-      props: (props: any) => props,
+      component: Icon,
+      props: () => ({}),
     },
 
     input: {
       component: Input,
-      props: (props: any) => props,
+      props: (props: InputProps) => props,
     },
 
     inputNumber: {
       component: TInputNumber,
-      props: (props: any) => ({
+      props: (props: InputNumberProps) => ({
         modelValue: props.modelValue,
         align: props.controlsPosition,
         disabled: props.disabled,
@@ -228,7 +329,7 @@ const adapter: any = {
 
     option: {
       component: TOption,
-      props: (props: any) => ({
+      props: (props: OptionProps) => ({
         value: props.value,
         label: props.label,
         disabled: props.disabled,
@@ -237,29 +338,47 @@ const adapter: any = {
 
     optionGroup: {
       component: TOptionGroup,
-      props: (props: any) => props,
+      props: (props: OptionGroupProps) => props,
     },
 
     pagination: {
-      component: ElPagination,
-      props: (props: any) => props,
+      component: TPagination,
+      props: (props: PaginationProps) => ({
+        current: props.curPage,
+        pageSizeOptions: props.pageSizes,
+        pageSize: props.pagesize,
+        total: props.total,
+      }),
     },
 
     popover: {
-      component: ElPopover,
-      props: (props: any) => props,
+      component: TPopup,
+      props: (props: PopoverProps) => ({
+        placement: props.placement,
+        trigger: props.trigger,
+        content: props.content,
+        disabled: props.disabled,
+        overlayClassName: props.popperClass,
+      }),
     },
 
     radio: {
       component: TRadio,
-      props: (props: any) => ({
+      props: (props: RadioProps) => ({
+        label: props.label,
+      }),
+    },
+
+    radioButton: {
+      component: TRadioButton,
+      props: (props: RadioButtonProps) => ({
         label: props.label,
       }),
     },
 
     radioGroup: {
       component: TRadioGroup,
-      props: (props: any) => ({
+      props: (props: RadioGroupProps) => ({
         modelValue: props.modelValue,
         disabled: props.disabled,
         size: props.size === 'default' ? 'medium' : props.size,
@@ -271,13 +390,13 @@ const adapter: any = {
     },
 
     scrollbar: {
-      component: ElScrollbar,
-      props: (props: any) => props,
+      component: Scrollbar,
+      props: () => ({}),
     },
 
     select: {
       component: TSelect,
-      props: (props: any) => ({
+      props: (props: SelectProps) => ({
         modelValue: props.modelValue,
         clearable: props.clearable,
         filterable: props.filterable,
@@ -295,7 +414,7 @@ const adapter: any = {
 
     step: {
       component: TStepItem,
-      props: (props: any) => ({
+      props: (props: StepProps) => ({
         title: props.props,
         value: props.status,
       }),
@@ -303,14 +422,14 @@ const adapter: any = {
 
     steps: {
       component: TSteps,
-      props: (props: any) => ({
+      props: (props: StepsProps) => ({
         current: props.active,
       }),
     },
 
     switch: {
       component: TSwitch,
-      props: (props: any) => ({
+      props: (props: SwitchProps) => ({
         modelValue: props.modelValue,
         disabled: props.disabled,
         label: props.label,
@@ -320,35 +439,43 @@ const adapter: any = {
     },
 
     table: {
-      component: ElTable,
-      props: (props: any) => props,
+      component: TTable,
+      props: (props: TableProps) => props,
     },
 
     tableColumn: {
-      component: ElTableColumn,
-      props: (props: any) => props,
+      component: TableColumn,
+      props: (props: TableColumnProps) => props,
     },
 
     tabPane: {
-      component: ElTabPane,
-      props: (props: any) => props,
+      component: TTabPanel,
+      props: (props: TabPaneProps) => ({
+        label: props.label,
+        value: props.name,
+      }),
     },
 
     tabs: {
-      component: ElTabs,
-      props: (props: any) => props,
+      component: TTabs,
+      props: (props: TabsProps) => ({
+        addable: props.editable,
+        theme: props.type === 'card' ? 'card' : 'normal',
+        placement: props.tabPosition,
+        value: props.modelValue,
+      }),
     },
 
     tag: {
       component: TTag,
-      props: (props: any) => ({
+      props: (props: TagProps) => ({
         theme: props.type ? props.type : 'default',
       }),
     },
 
     timePicker: {
       component: TTimePicker,
-      props: (props: any) => ({
+      props: (props: TimePickerProps) => ({
         modelValue: props.modelValue,
         disabled: props.disabled,
         size: props.size === 'default' ? 'medium' : props.size,
@@ -358,20 +485,41 @@ const adapter: any = {
 
     tooltip: {
       component: TTooltip,
-      props: (props: any) => ({
+      props: (props: TooltipProps) => ({
         placement: props.placement,
         content: props.content,
       }),
     },
 
     tree: {
-      component: ElTree,
-      props: (props: any) => props,
+      component: Tree,
+      props: (props: TreeProps) => ({
+        ...props,
+        data: props.data,
+        draggable: props.draggable,
+        activable: props.highlightCurrent,
+        activeMultiple: props.highlightCurrent,
+        defaultActived: props.defaultCheckedKeys,
+        checkable: props.showCheckbox,
+        empty: props.emptyText,
+        expandAll: props.defaultExpandAll,
+        checkStrictly: props.checkStrictly,
+        load: props.load,
+        keys: props.props,
+      }),
+      listeners: {
+        click(context: { node: TreeNodeModel<any>; e: MouseEvent }) {
+          return {
+            node: context.node,
+            data: context.node.data,
+          };
+        },
+      },
     },
 
     upload: {
       component: TUpload,
-      props: (props: any) => ({
+      props: (props: UploadProps) => ({
         action: props.action,
         disabled: props.disabled,
         autoUpload: props.autoUpload,

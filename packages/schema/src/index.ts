@@ -24,14 +24,54 @@ export enum NodeType {
 
 export type Id = string | number;
 
-export interface EventItemConfig {
+// 事件联动的动作类型
+export enum ActionType {
+  /** 联动组件 */
+  COMP = 'comp',
+  /** 联动代码 */
+  CODE = 'code',
+}
+
+export interface DataSourceDeps {
+  [dataSourceId: string | number]: Dep;
+}
+
+/** 事件类型(已废弃，后续不建议继续使用) */
+export interface DeprecatedEventConfig {
+  /** 待触发的事件名称 */
+  name: string;
   /** 被选中组件ID */
   to: Id;
-  /** 被选中组件名称 */
-  name: string;
   /** 触发事件后执行被选中组件的方法 */
   method: string;
 }
+
+export interface EventConfig {
+  /** 待触发的事件名称 */
+  name: string;
+  /** 动作响应配置 */
+  actions: EventActionItem[];
+}
+
+export interface CodeItemConfig {
+  /** 动作类型 */
+  actionType: ActionType;
+  /** 代码ID */
+  codeId: Id;
+  /** 代码参数 */
+  params?: object;
+}
+
+export interface CompItemConfig {
+  /** 动作类型 */
+  actionType: ActionType;
+  /** 被选中组件ID */
+  to: Id;
+  /** 触发事件后执行被选中组件的方法 */
+  method: string;
+}
+
+export type EventActionItem = CompItemConfig | CodeItemConfig;
 
 export interface MComponent {
   /** 组件ID，默认为${type}_${number}}形式, 如：page_123 */
@@ -43,7 +83,7 @@ export interface MComponent {
   /** 组件根Dom上的class */
   className?: string;
   /* 关联事件集合 */
-  events?: EventItemConfig[];
+  events?: EventConfig[] | DeprecatedEventConfig[];
   /** 组件根Dom的style */
   style?: {
     [key: string]: any;
@@ -70,6 +110,10 @@ export interface MApp extends MComponent {
   items: MPage[];
   /** 代码块 */
   codeBlocks?: CodeBlockDSL;
+
+  dataSources?: DataSourceSchema[];
+
+  dataSourceDeps?: DataSourceDeps;
 }
 
 export interface CodeBlockDSL {
@@ -93,7 +137,7 @@ export interface CodeParam {
   /** 扩展字段 */
   [propName: string]: any;
 }
-export interface PastePosition {hoo
+export interface PastePosition {
   left?: number;
   top?: number;
 }
@@ -103,4 +147,42 @@ export type MNode = MComponent | MContainer | MPage | MApp;
 export enum HookType {
   /** 代码块钩子标识 */
   CODE = 'code',
+}
+
+export interface DataSchema {
+  type?: 'null' | 'boolean' | 'object' | 'array' | 'number' | 'string' | 'any';
+  /** 键名 */
+  name: string;
+  /** 展示名称 */
+  title?: string;
+  /** 实体描述，鼠标hover时展示 */
+  description?: string;
+  /** 默认值 */
+  defaultValue?: any;
+  /** 是否可用 */
+  enable?: boolean;
+  /** type === 'object' || type === 'array' */
+  fields?: DataSchema[];
+}
+
+export interface DataSourceSchema {
+  /** 数据源类型，根据类型来实例化；例如http则使用new HttpDataSource */
+  type: string;
+  /** 实体ID */
+  id: string;
+  /** 实体名称，用于关联时展示 */
+  title?: string;
+  /** 实体描述，鼠标hover时展示 */
+  description?: string;
+  /** 字段列表 */
+  fields: DataSchema[];
+  /** 扩展字段 */
+  [key: string]: any;
+}
+
+export interface Dep {
+  [nodeId: Id]: {
+    name: string;
+    keys: Id[];
+  };
 }

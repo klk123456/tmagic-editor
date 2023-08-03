@@ -1,5 +1,5 @@
 <template>
-  <component class="tmagic-design-popover" :is="uiComponent.component" v-bind="uiProps">
+  <component class="tmagic-design-popover" :is="uiComponent" v-bind="uiProps">
     <slot></slot>
 
     <template #reference>
@@ -8,23 +8,21 @@
   </component>
 </template>
 
-<script setup lang="ts" name="TMPopover">
+<script setup lang="ts">
 import { computed } from 'vue';
 
 import { getConfig } from './config';
+import type { PopoverProps } from './types';
 
-const props = defineProps<{
-  placement?: string;
-  width?: string | number;
-  title?: string;
-  trigger?: string;
-  effect?: string;
-  content?: string;
-  disabled?: boolean;
-  popperClass?: string;
-}>();
+defineOptions({
+  name: 'TMPopover',
+});
 
-const uiComponent = getConfig('components').popover;
+const props = defineProps<PopoverProps>();
 
-const uiProps = computed(() => uiComponent.props(props));
+const ui = getConfig('components')?.popover;
+
+const uiComponent = ui?.component || 'el-popover';
+
+const uiProps = computed(() => ui?.props(props) || props);
 </script>

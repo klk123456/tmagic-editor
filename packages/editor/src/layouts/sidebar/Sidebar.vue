@@ -1,16 +1,16 @@
 <template>
-  <TMagicTabs
+  <component
     v-if="data.type === 'tabs' && data.items.length"
-    class="m-editor-sidebar"
     v-model="activeTabName"
-    type="card"
-    tab-position="left"
+    class="m-editor-sidebar tmagic-design-tabs"
+    v-bind="tabsComponent?.props({ type: 'card', tabPosition: 'left' }) || {}"
+    :is="tabsComponent?.component || 'el-tabs'"
   >
     <component
-      :is="uiComponent.component"
       v-for="(config, index) in sideBarItems"
+      v-bind="tabPaneComponent?.props({ name: config.text, lazy: config.lazy }) || {}"
+      :is="tabPaneComponent?.component || 'el-tab-pane'"
       :key="config.$key || index"
-      :name="config.text"
     >
       <template #label>
         <div :key="config.text">
@@ -80,34 +80,40 @@
         </template>
       </component>
     </component>
-  </TMagicTabs>
+  </component>
 </template>
 
-<script lang="ts" setup name="MEditorSidebar">
+<script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
-import { Coin, EditPen, Files } from '@element-plus/icons-vue';
+import { Coin, EditPen, Goods, List } from '@element-plus/icons-vue';
 
-import { getConfig, TMagicTabs } from '@tmagic/design';
+import { getConfig } from '@tmagic/design';
 
-import MIcon from '../../components/Icon.vue';
-import type { MenuButton, MenuComponent, SideComponent, SideItem } from '../../type';
-import { SideBarData } from '../../type';
+import MIcon from '@editor/components/Icon.vue';
+import type { MenuButton, MenuComponent, SideComponent, SideItem } from '@editor/type';
+import { SideBarData } from '@editor/type';
 
 import CodeBlockList from './code-block/CodeBlockList.vue';
+import DataSourceListPanel from './data-source/DataSourceListPanel.vue';
 import ComponentListPanel from './ComponentListPanel.vue';
 import LayerPanel from './LayerPanel.vue';
 
+defineOptions({
+  name: 'MEditorSidebar',
+});
+
 const props = withDefaults(
   defineProps<{
-    data?: SideBarData;
+    data: SideBarData;
     layerContentMenu: (MenuButton | MenuComponent)[];
   }>(),
   {
-    data: () => ({ type: 'tabs', status: '组件', items: ['component-list', 'layer', 'code-block'] }),
+    data: () => ({ type: 'tabs', status: '组件', items: ['component-list', 'layer', 'code-block', 'data-source'] }),
   },
 );
 
-const uiComponent = getConfig('components').tabPane;
+const tabPaneComponent = getConfig('components')?.tabPane;
+const tabsComponent = getConfig('components')?.tabs;
 
 const activeTabName = ref(props.data?.status);
 
@@ -116,7 +122,7 @@ const getItemConfig = (data: SideItem): SideComponent => {
     'component-list': {
       $key: 'component-list',
       type: 'component',
-      icon: Coin,
+      icon: Goods,
       text: '组件',
       component: ComponentListPanel,
       slots: {},
@@ -124,7 +130,7 @@ const getItemConfig = (data: SideItem): SideComponent => {
     layer: {
       $key: 'layer',
       type: 'component',
-      icon: Files,
+      icon: List,
       text: '已选组件',
       props: {
         layerContentMenu: props.layerContentMenu,
@@ -138,6 +144,14 @@ const getItemConfig = (data: SideItem): SideComponent => {
       icon: EditPen,
       text: '代码编辑',
       component: CodeBlockList,
+      slots: {},
+    },
+    'data-source': {
+      $key: 'data-source',
+      type: 'component',
+      icon: Coin,
+      text: '数据源',
+      component: DataSourceListPanel,
       slots: {},
     },
   };

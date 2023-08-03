@@ -87,6 +87,7 @@ export interface FormItem {
   dynamicKey?: string;
   /** 是否需要显示`展开更多配置` */
   expand?: boolean;
+  [key: string]: any;
 }
 
 export interface ContainerCommonConfig {
@@ -432,10 +433,11 @@ export interface SelectConfig extends FormItem, Input {
   multiple?: boolean;
   valueKey?: string;
   allowCreate?: boolean;
+  filterable?: boolean;
   group?: boolean;
-  options: SelectConfigOption[] | SelectConfigGroupOption[] | SelectOptionFunction;
-  remote: true;
-  option: {
+  options?: SelectConfigOption[] | SelectConfigGroupOption[] | SelectOptionFunction;
+  remote?: true;
+  option?: {
     url: string | ((mForm: FormState | undefined, data: { model: any; formValue: any }) => string);
     initUrl?: string | ((mForm: FormState | undefined, data: { model: any; formValue: any }) => string);
     method?: 'jsonp' | string;
@@ -566,6 +568,7 @@ export interface TabPaneConfig {
   onTabClick?: (mForm: FormState | undefined, tab: any, data: any) => void;
   [key: string]: any;
 }
+
 export interface TabConfig extends FormItem, ContainerCommonConfig {
   type: 'tab' | 'dynamic-tab';
   tabType?: string;
@@ -659,6 +662,7 @@ export interface GroupListConfig extends FormItem {
   tableItems?: FormConfig;
   titleKey?: string;
   itemExtra?: string | FilterFunction;
+  expandAll?: boolean;
   addable?: (mForm: FormState | undefined, data: any) => boolean | 'undefined' | boolean;
   defaultAdd?: (mForm: FormState | undefined, data: any) => any;
   delete?: (model: any, index: number | string | symbol, values: any) => boolean | boolean;
@@ -717,6 +721,6 @@ export type ChildConfig =
   | DynamicFieldConfig
   | ComponentConfig;
 
-export type FormConfig = (ChildConfig & { [key: string]: any })[];
+export type FormConfig = ChildConfig[];
 
 export type FormValue = Record<string | number, any>;

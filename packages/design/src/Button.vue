@@ -1,24 +1,28 @@
 <template>
-  <component class="tmagic-design-button" :is="uiComponent.component" v-bind="uiProps" @click="clickHandler">
-    <slot></slot>
+  <component class="tmagic-design-button" :is="uiComponent" v-bind="uiProps" @click="clickHandler">
+    <template #default v-if="$slots.default">
+      <slot></slot>
+    </template>
   </component>
 </template>
 
-<script setup lang="ts" name="TMButton">
+<script setup lang="ts">
 import { computed } from 'vue';
 
 import { getConfig } from './config';
+import type { ButtonProps } from './types';
 
-const props = defineProps<{
-  type?: string;
-  size?: 'large' | 'default' | 'small';
-  text?: boolean;
-  icon?: any;
-}>();
+defineOptions({
+  name: 'TMButton',
+});
 
-const uiComponent = getConfig('components').button;
+const props = defineProps<ButtonProps>();
 
-const uiProps = computed(() => uiComponent.props(props));
+const ui = getConfig('components')?.button;
+
+const uiComponent = ui?.component || 'el-button';
+
+const uiProps = computed(() => ui?.props(props) || props);
 
 const emit = defineEmits(['click']);
 

@@ -20,6 +20,7 @@
       </div>
     </template>
     <CodeDraftEditor
+      ref="codeDraftEditor"
       :id="id"
       :content="codeContent"
       :editable="editable"
@@ -31,7 +32,7 @@
     ></CodeDraftEditor>
   </TMagicCard>
 </template>
-<script lang="ts" setup name="MEditorFunctionEditor">
+<script lang="ts" setup>
 import { inject, provide, ref, watchEffect } from 'vue';
 import { cloneDeep } from 'lodash-es';
 
@@ -39,9 +40,17 @@ import { TMagicCard, TMagicInput, tMagicMessage } from '@tmagic/design';
 import { ColumnConfig, TableConfig } from '@tmagic/form';
 import { CodeParam, Id } from '@tmagic/schema';
 
-import type { Services } from '../type';
+import type { Services } from '@editor/type';
+import { getConfig } from '@editor/utils/config';
 
 import CodeDraftEditor from './CodeDraftEditor.vue';
+
+defineOptions({
+  name: 'MEditorFunctionEditor',
+});
+
+provide('mForm', null);
+
 const defaultParamColConfig: ColumnConfig = {
   type: 'row',
   label: '参数类型',
@@ -116,18 +125,11 @@ const tableConfig: TableConfig = {
   ],
 };
 
-const emit = defineEmits(['change', 'field-input']);
-
 const services = inject<Services>('services');
 
 const codeName = ref<string>('');
 const codeContent = ref<string>('');
 const evalRes = ref(true);
-
-provide('mForm', {
-  $emit: emit,
-  setField: () => {},
-});
 
 const tableModel = ref<{ params: CodeParam[] }>();
 watchEffect(() => {
@@ -148,9 +150,8 @@ initTableModel();
 // 保存前钩子
 const beforeSave = (codeValue: string): boolean => {
   try {
-    // eval检测js代码是否存在语法错误
-    // eslint-disable-next-line no-eval
-    eval(codeValue);
+    // 检测js代码是否存在语法错误
+    getConfig('parseDSL')(codeValue);
     return true;
   } catch (e: any) {
     tMagicMessage.error(e.stack);
@@ -169,7 +170,7 @@ const saveCode = async (codeValue: string): Promise<void> => {
       content: codeValue,
       params: tableModel.value?.params || [],
     });
-    tMagicMessage.success('代码保存成功');
+    tMagicMessage.success('代码成功保存到本地');
     // 删除草稿
     services?.codeBlockService.removeCodeDraft(props.id);
   }
@@ -187,4 +188,10 @@ const saveAndClose = async (codeValue: string): Promise<void> => {
 const close = (): void => {
   services?.codeBlockService.setCodeEditorShowStatus(false);
 };
+
+const codeDraftEditor = ref<InstanceType<typeof CodeDraftEditor>>();
+
+defineExpose({
+  codeDraftEditor,
+});
 </script>

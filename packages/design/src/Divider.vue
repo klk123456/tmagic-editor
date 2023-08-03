@@ -1,21 +1,24 @@
 <template>
-  <component class="tmagic-design-divider" :is="uiComponent.component" v-bind="uiProps">
+  <component class="tmagic-design-divider" :is="uiComponent" v-bind="uiProps">
     <slot></slot>
   </component>
 </template>
 
-<script setup lang="ts" name="TMDivider">
+<script setup lang="ts">
 import { computed } from 'vue';
 
 import { getConfig } from './config';
+import type { DividerProps } from './types';
 
-const props = defineProps<{
-  direction?: string;
-  borderStyle?: string;
-  contentPosition?: string;
-}>();
+defineOptions({
+  name: 'TMDivider',
+});
 
-const uiComponent = getConfig('components').divider;
+const props = defineProps<DividerProps>();
 
-const uiProps = computed(() => uiComponent.props(props));
+const ui = getConfig('components')?.divider;
+
+const uiComponent = ui?.component || 'el-divider';
+
+const uiProps = computed(() => ui?.props(props) || props);
 </script>

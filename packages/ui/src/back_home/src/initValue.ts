@@ -17,11 +17,11 @@
  */
 
 export default {
-  _config: 'F7:解除关联|Cancel|blue|true',
-  HyperText: 'backhome',
+  _config: "F7:解除关联|Cancel|blue|true",
+  HyperText: "backhome",
   style: {
-    position: 'absolute',
-    width: '200',
-    height: '60',
+    position: "absolute",
+    width: "12.5vw",
+    height: "4.063vw",
   },
 };

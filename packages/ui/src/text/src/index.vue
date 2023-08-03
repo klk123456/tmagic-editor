@@ -3,9 +3,9 @@
 </template>
 
 <script lang="ts" setup>
-import { MComponent } from '@tmagic/schema';
+import { MComponent } from "@tmagic/schema";
 
-import useApp from '../../useApp';
+import useApp from "../../useApp";
 
 const props = withDefaults(
   defineProps<{
@@ -14,7 +14,7 @@ const props = withDefaults(
   }>(),
   {
     model: () => ({}),
-  },
+  }
 );
 
 useApp({

@@ -18,7 +18,11 @@
 
 import Vue from 'vue';
 
+import Core from '@tmagic/core';
+
 import App from './App.vue';
+
+import '@tmagic/utils/resetcss.css';
 
 Promise.all([import('../.tmagic/comp-entry'), import('../.tmagic/plugin-entry')]).then(([components, plugins]) => {
   Object.entries(components.default).forEach(([type, component]: [string, any]) => {
@@ -29,9 +33,25 @@ Promise.all([import('../.tmagic/comp-entry'), import('../.tmagic/plugin-entry')]
     Vue.use(plugin);
   });
 
+  const app = new Core({
+    ua: window.navigator.userAgent,
+    platform: 'editor',
+  });
+
+  if (app.env.isWeb) {
+    app.setDesignWidth(window.document.documentElement.getBoundingClientRect().width);
+  }
+
+  window.appInstance = app;
+
+  Vue.prototype.app = app;
+
   new Vue({
     // @ts-ignore
     render: (h) => h(App),
+    provide: {
+      app,
+    },
     el: '#app',
   });
 });

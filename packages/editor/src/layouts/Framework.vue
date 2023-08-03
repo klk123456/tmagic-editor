@@ -1,16 +1,16 @@
 <template>
   <div class="m-editor">
-    <slot name="nav" class="m-editor-nav-menu"></slot>
+    <slot name="header"></slot>
 
-    <magic-code-editor
-      v-if="showSrc"
-      class="m-editor-content"
-      :init-values="root"
-      :options="codeOptions"
-      @save="saveCode"
-    ></magic-code-editor>
+    <slot name="nav"></slot>
 
-    <Layout
+    <slot name="content-before"></slot>
+
+    <slot name="src-code" v-if="showSrc">
+      <CodeEditor class="m-editor-content" :init-values="root" :options="codeOptions" @save="saveCode"></CodeEditor>
+    </slot>
+
+    <SplitView
       v-else
       class="m-editor-content"
       left-class="m-editor-framework-left"
@@ -18,8 +18,8 @@
       right-class="m-editor-framework-right"
       v-model:left="columnWidth.left"
       v-model:right="columnWidth.right"
-      :min-left="45"
-      :min-right="1"
+      :min-left="65"
+      :min-right="20"
       @change="columnWidthChange"
     >
       <template #left>
@@ -33,41 +33,41 @@
         </slot>
       </template>
 
-      <template v-if="pageLength > 0 && nodes.length === 1" #right>
+      <template v-if="pageLength > 0" #right>
         <TMagicScrollbar>
           <slot name="props-panel"></slot>
         </TMagicScrollbar>
       </template>
-    </Layout>
+    </SplitView>
+
+    <slot name="content-after"></slot>
+    <slot name="footer"></slot>
   </div>
 </template>
 
-<script lang="ts" setup name="MEditorFramework">
+<script lang="ts" setup>
 import { computed, inject, ref, watch } from 'vue';
 
 import { TMagicScrollbar } from '@tmagic/design';
 
-import Layout from '../components/Layout.vue';
-import { GetColumnWidth, Services } from '../type';
+import SplitView from '@editor/components/SplitView.vue';
+import type { GetColumnWidth, Services } from '@editor/type';
+import { getConfig } from '@editor/utils/config';
 
 import AddPageBox from './AddPageBox.vue';
+import CodeEditor from './CodeEditor.vue';
+
+defineOptions({
+  name: 'MEditorFramework',
+});
 
 const DEFAULT_LEFT_COLUMN_WIDTH = 310;
 const DEFAULT_RIGHT_COLUMN_WIDTH = 480;
 
-withDefaults(
-  defineProps<{
-    codeOptions?: Record<string, any>;
-  }>(),
-  {
-    codeOptions: () => ({}),
-  },
-);
-
+const codeOptions = inject('codeOptions', {});
 const { editorService, uiService } = inject<Services>('services') || {};
 
 const root = computed(() => editorService?.get('root'));
-const nodes = computed(() => editorService?.get('nodes') || []);
 
 const pageLength = computed(() => editorService?.get('pageLength') || 0);
 const showSrc = computed(() => uiService?.get('showSrc'));
@@ -131,8 +131,8 @@ const columnWidthChange = (columnW: GetColumnWidth) => {
 
 const saveCode = (value: string) => {
   try {
-    // eslint-disable-next-line no-eval
-    editorService?.set('root', eval(value));
+    const parseDSL = getConfig('parseDSL');
+    editorService?.set('root', parseDSL(value));
   } catch (e: any) {
     console.error(e);
   }

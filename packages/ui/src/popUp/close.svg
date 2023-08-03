@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="98px" height="98px" viewBox="0 0 98 98" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 62 (91390) - https://sketch.com -->
+    <title>关闭</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="2" y="2" width="40" height="40" rx="20"></rect>
+        <filter x="-117.5%" y="-107.5%" width="335.0%" height="335.0%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="4" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="15" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.313518767   0 0 0 0 0.445345895   0 0 0 0 0.848816803  0 0 0 0.25 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="智能自助平台_02借记卡发卡" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="4-0-1-点击二维码放大展示" transform="translate(-889.000000, -299.000000)">
+            <g id="编组-27" transform="translate(290.000000, 292.000000)">
+                <g id="关闭" transform="translate(626.000000, 30.000000)">
+                    <g id="矩形">
+                        <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                        <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+                    </g>
+                    <g id="编组-30" transform="translate(22.000000, 22.000000) rotate(45.000000) translate(-22.000000, -22.000000) translate(7.000000, 7.000000)" fill="#666666">
+                        <path d="M1.66666667,13.3333333 L28.3333333,13.3333333 C29.2538079,13.3333333 30,14.0795254 30,15 C30,15.9204746 29.2538079,16.6666667 28.3333333,16.6666667 L1.66666667,16.6666667 C0.746192084,16.6666667 1.5650831e-12,15.9204746 1.56497038e-12,15 C1.56485765e-12,14.0795254 0.746192084,13.3333333 1.66666667,13.3333333 Z" id="矩形" transform="translate(15.000000, 15.000000) rotate(90.000000) translate(-15.000000, -15.000000) "></path>
+                        <rect id="矩形" x="0" y="13.3333333" width="30" height="3.33333333" rx="1.66666667"></rect>
+                    </g>
+                    <g id="编组-3">
+                        <rect id="矩形" x="0" y="0" width="44" height="44"></rect>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

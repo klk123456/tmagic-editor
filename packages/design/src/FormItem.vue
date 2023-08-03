@@ -1,5 +1,5 @@
 <template>
-  <component class="tmagic-design-form-item" :is="uiComponent.component" v-bind="uiProps">
+  <component class="tmagic-design-form-item" :is="uiComponent" v-bind="uiProps">
     <template #label>
       <slot name="label"></slot>
     </template>
@@ -7,17 +7,21 @@
   </component>
 </template>
 
-<script setup lang="ts" name="TMFormItem">
+<script setup lang="ts">
 import { computed } from 'vue';
 
 import { getConfig } from './config';
-const props = defineProps<{
-  prop?: string;
-  labelWidth?: string;
-  rules?: any;
-}>();
+import type { FormItemProps } from './types';
 
-const uiComponent = getConfig('components').formItem;
+defineOptions({
+  name: 'TMFormItem',
+});
 
-const uiProps = computed(() => uiComponent.props(props));
+const props = defineProps<FormItemProps>();
+
+const ui = getConfig('components')?.formItem;
+
+const uiComponent = ui?.component || 'el-form-item';
+
+const uiProps = computed(() => ui?.props(props) || props);
 </script>

@@ -7,14 +7,18 @@
   </div>
 </template>
 
-<script setup lang="ts" name="MEditorBreadcrumb">
+<script setup lang="ts">
 import { computed, inject } from 'vue';
 
 import { TMagicButton } from '@tmagic/design';
 import type { MNode } from '@tmagic/schema';
 import { getNodePath } from '@tmagic/utils';
 
-import type { Services } from '../../type';
+import type { Services } from '@editor/type';
+
+defineOptions({
+  name: 'MEditorBreadcrumb',
+});
 
 const services = inject<Services>('services');
 const editorService = services?.editorService;

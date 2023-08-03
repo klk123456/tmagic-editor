@@ -18,9 +18,6 @@
 
 import { FormConfig, FormState } from '@tmagic/form';
 
-import editorService from '../services/editor';
-import eventsService from '../services/events';
-
 /**
  * 统一为组件属性表单加上事件、高级、样式配置
  * @param config 组件属性配置
@@ -73,6 +70,14 @@ export const fillConfig = (config: FormConfig = []) => [
                     text: '固定定位',
                   },
                   {
+                    name: 'textAlign',
+                    type: 'checkbox',
+                    activeValue: 'center',
+                    inactiveValue: '',
+                    defaultValue: '',
+                    text: '居中',
+                  },
+                  {
                     name: 'left',
                     text: 'left',
                   },
@@ -105,6 +110,45 @@ export const fillConfig = (config: FormConfig = []) => [
                   {
                     name: 'height',
                     text: '高度',
+                  },
+                ],
+              },
+              {
+                type: 'fieldset',
+                legend: '边框',
+                items: [
+                  {
+                    name: 'borderWidth',
+                    text: '宽度',
+                    defaultValue: '0',
+                  },
+                  {
+                    name: 'borderColor',
+                    text: '颜色',
+                    type: 'colorPicker',
+                  },
+                  {
+                    name: 'borderRadius',
+                    text: '圆角',
+                    defaultValue: '0',
+                  },
+                  {
+                    name: 'borderStyle',
+                    text: '样式',
+                    type: 'select',
+                    defaultValue: 'none',
+                    options: [
+                      { text: 'none', value: 'none' },
+                      { text: 'hidden', value: 'hidden' },
+                      { text: 'dotted', value: 'dotted' },
+                      { text: 'dashed', value: 'dashed' },
+                      { text: 'solid', value: 'solid' },
+                      { text: 'double', value: 'double' },
+                      { text: 'groove', value: 'groove' },
+                      { text: 'ridge', value: 'ridge' },
+                      { text: 'inset', value: 'inset' },
+                      { text: 'outset', value: 'outset' },
+                    ],
                   },
                 ],
               },
@@ -183,39 +227,9 @@ export const fillConfig = (config: FormConfig = []) => [
         title: '事件',
         items: [
           {
-            type: 'table',
             name: 'events',
-            items: [
-              {
-                name: 'name',
-                label: '事件名',
-                type: 'select',
-                options: (mForm: FormState, { formValue }: any) =>
-                  eventsService.getEvent(formValue.type).map((option) => ({
-                    text: option.label,
-                    value: option.value,
-                  })),
-              },
-              {
-                name: 'to',
-                label: '联动组件',
-                type: 'ui-select',
-              },
-              {
-                name: 'method',
-                label: '动作',
-                type: 'select',
-                options: (mForm: FormState, { model }: any) => {
-                  const node = editorService.getNodeById(model.to);
-                  if (!node?.type) return [];
-
-                  return eventsService.getMethod(node.type).map((option) => ({
-                    text: option.label,
-                    value: option.value,
-                  }));
-                },
-              },
-            ],
+            type: 'event-select',
+            labelWidth: 0,
           },
         ],
       },

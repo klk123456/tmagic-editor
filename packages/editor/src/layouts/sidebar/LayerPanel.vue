@@ -2,15 +2,7 @@
   <TMagicScrollbar class="magic-editor-layer-panel">
     <slot name="layer-panel-header"></slot>
 
-    <TMagicInput
-      v-model="filterText"
-      class="search-input"
-      size="small"
-      placeholder="输入关键字进行过滤"
-      clearable
-      :prefix-icon="Search"
-      @change="filterTextChangeHandler"
-    ></TMagicInput>
+    <SearchInput @search="filterTextChangeHandler"></SearchInput>
 
     <TMagicTree
       v-if="values.length"
@@ -18,6 +10,7 @@
       ref="tree"
       node-key="id"
       empty-text="页面空荡荡的"
+      tabindex="-1"
       draggable
       :default-expanded-keys="expandedKeys"
       :default-checked-keys="checkedKeys"
@@ -42,9 +35,7 @@
       <template #default="{ node, data }">
         <div class="cus-tree-node" :id="data.id" @mouseenter="highlightHandler(data)">
           <slot name="layer-node-content" :node="node" :data="data">
-            <span>
-              {{ `${data.name} (${data.id})` }}
-            </span>
+            <LayerNode :data="data"></LayerNode>
           </slot>
         </div>
       </template>
@@ -56,21 +47,25 @@
   </TMagicScrollbar>
 </template>
 
-<script lang="ts" setup name="MEditorLayerPanel">
-import { computed, inject, onMounted, onUnmounted, ref, watch } from 'vue';
-import { Search } from '@element-plus/icons-vue';
-import KeyController from 'keycon';
+<script lang="ts" setup>
+import { computed, inject, onBeforeUnmount, onMounted, onUnmounted, ref, watch } from 'vue';
 import { difference, throttle, union } from 'lodash-es';
 
-import { TMagicInput, TMagicScrollbar, TMagicTree } from '@tmagic/design';
+import { TMagicScrollbar, TMagicTree } from '@tmagic/design';
 import type { Id, MNode, MPage } from '@tmagic/schema';
 import { MContainer, NodeType } from '@tmagic/schema';
 import { getNodePath, isPage } from '@tmagic/utils';
 
-import type { MenuButton, MenuComponent, Services } from '../../type';
-import { Layout } from '../../type';
+import SearchInput from '@editor/components/SearchInput.vue';
+import type { MenuButton, MenuComponent, Services } from '@editor/type';
+import { Layout } from '@editor/type';
 
 import LayerMenu from './LayerMenu.vue';
+import LayerNode from './LayerNode.vue';
+
+defineOptions({
+  name: 'MEditorLayerPanel',
+});
 
 defineProps<{
   layerContentMenu: (MenuButton | MenuComponent)[];
@@ -79,6 +74,7 @@ defineProps<{
 const throttleTime = 150;
 const services = inject<Services>('services');
 const editorService = services?.editorService;
+const keybindingService = services?.keybindingService;
 
 const tree = ref<InstanceType<typeof TMagicTree>>();
 const menu = ref<InstanceType<typeof LayerMenu>>();
@@ -87,7 +83,6 @@ const menu = ref<InstanceType<typeof LayerMenu>>();
 const checkedKeys = ref<Id[]>([]);
 // 是否多选
 const isCtrlKeyDown = ref(false);
-const filterText = ref('');
 // 默认展开节点
 const expandedKeys = ref<Id[]>([]);
 const currentNodeKey = ref<Id>();
@@ -96,6 +91,8 @@ const clicked = ref(false);
 
 const treeProps = {
   children: 'items',
+  label: 'name',
+  value: 'id',
   disabled: (data: MNode) => Boolean(data.items?.length),
   class: (data: MNode) => {
     if (clicked.value || isPage(data)) return '';
@@ -147,7 +144,7 @@ const allowDrop = (draggingNode: any, dropNode: any, type: string): boolean => {
 
   if (ingType !== NodeType.PAGE && data.type === NodeType.PAGE) return false;
   if (ingType === NodeType.PAGE && data.type !== NodeType.PAGE) return false;
-  if (!data || !data.type) return false;
+  if (!data?.type) return false;
   if (['prev', 'next'].includes(type)) return true;
   if (data.items || data.type === 'container') return true;
 
@@ -249,34 +246,69 @@ const windowBlurHandler = () => {
   isCtrlKeyDown.value = false;
 };
 
-let keycon: KeyController;
+keybindingService?.registeCommand('layer-panel-not-ctrl-keydown', (e) => {
+  if (e.key !== keybindingService.ctrlKey) {
+    isCtrlKeyDown.value = false;
+  }
+});
+
+keybindingService?.registeCommand('layer-panel-ctrl-keydown', () => {
+  isCtrlKeyDown.value = true;
+});
+
+keybindingService?.registeCommand('layer-panel-ctrl-keyup', () => {
+  isCtrlKeyDown.value = false;
+});
+
+keybindingService?.registeCommand('layer-panel-global-keydwon', () => {
+  if (!tree.value?.$el.contains(document.activeElement)) {
+    isCtrlKeyDown.value = false;
+  }
+});
+
+keybindingService?.registe([
+  {
+    command: 'layer-panel-not-ctrl-keydown',
+    when: [['layer-panel', 'keydown']],
+  },
+  {
+    command: 'layer-panel-ctrl-keydown',
+    keybinding: 'ctrl',
+    when: [['layer-panel', 'keydown']],
+  },
+  {
+    command: 'layer-panel-ctrl-keyup',
+    keybinding: 'ctrl',
+    when: [['layer-panel', 'keyup']],
+  },
+  {
+    command: 'layer-panel-global-keydwon',
+    keybinding: 'ctrl',
+    when: [['global', 'keydown']],
+  },
+]);
+
+watch(tree, () => {
+  if (tree.value?.$el) {
+    keybindingService?.registeEl('layer-panel', tree.value.$el);
+
+    tree.value.$el.addEventListener('blur', windowBlurHandler);
+  } else {
+    keybindingService?.unregisteEl('layer-panel');
+  }
+});
 
 onMounted(() => {
   editorService?.on('remove', editorServiceRemoveHandler);
 
-  keycon = new KeyController();
-  const isMac = /mac os x/.test(navigator.userAgent.toLowerCase());
-  const ctrl = isMac ? 'meta' : 'ctrl';
-
-  keycon
-    .keydown((e) => {
-      if (e.key !== ctrl) {
-        isCtrlKeyDown.value = false;
-      }
-    })
-    .keydown(ctrl, () => {
-      isCtrlKeyDown.value = true;
-    })
-    .keyup(ctrl, () => {
-      isCtrlKeyDown.value = false;
-    });
-
   globalThis.addEventListener('blur', windowBlurHandler);
 });
 
-onUnmounted(() => {
-  keycon.destroy();
+onBeforeUnmount(() => {
+  tree.value?.$el.removeEventListener('blur', windowBlurHandler);
+});
 
+onUnmounted(() => {
   editorService?.off('remove', editorServiceRemoveHandler);
   globalThis.removeEventListener('blur', windowBlurHandler);
 });
@@ -317,7 +349,11 @@ const clickHandler = (data: MNode): void => {
 // 右键菜单
 const contextmenu = async (event: MouseEvent, data: MNode): Promise<void> => {
   event.preventDefault();
-  await select(data);
+
+  if (nodes.value.length < 2) {
+    await select(data);
+  }
+
   menu.value?.show(event);
 };
 </script>

@@ -194,7 +194,7 @@ export default {
   }
 }
 // }
-@media screen and (min-width: 1600px) and (min-height: 1200px) and (max-width: 1600px) and(max-height:1200px) {
+@media screen and (min-width: 1600px) and (min-height: 1200px) and (max-width: 1600px) and (max-height:1200px) {
   .cover {
     position: absolute;
     top: 0;

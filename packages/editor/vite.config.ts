@@ -19,19 +19,19 @@
 import path from 'path';
 
 import { defineConfig } from 'vite';
-import VueSetupExtend from 'vite-plugin-vue-setup-extend';
 import vue from '@vitejs/plugin-vue';
 
 import pkg from './package.json';
 
 export default defineConfig({
-  plugins: [vue(), VueSetupExtend()],
+  plugins: [vue()],
 
   resolve: {
     alias:
       process.env.NODE_ENV === 'production'
-        ? []
+        ? [{ find: /^@editor/, replacement: path.join(__dirname, './src') }]
         : [
+            { find: /^@editor/, replacement: path.join(__dirname, './src') },
             { find: /^@tmagic\/schema/, replacement: path.join(__dirname, '../schema/src/index.ts') },
             { find: /^@tmagic\/utils/, replacement: path.join(__dirname, '../utils/src/index.ts') },
             { find: /^@tmagic\/core/, replacement: path.join(__dirname, '../core/src/index.ts') },

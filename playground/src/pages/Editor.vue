@@ -17,16 +17,18 @@
       </template>
     </m-editor>
 
-    <el-dialog v-model="previewVisible"
-               destroy-on-close
-               class="pre-viewer"
-               title="预览"
-               :width="stageRect && stageRect.width">
+    <TMagicDialog v-model="previewVisible"
+                  destroy-on-close
+                  class="pre-viewer"
+                  title="预览"
+                  :width="stageRect && stageRect.width">
       <iframe v-if="previewVisible"
+              ref="iframe"
               width="100%"
+              style="border: none"
               :height="stageRect && stageRect.height"
               :src="previewUrl"></iframe>
-    </el-dialog>
+    </TMagicDialog>
     <el-dialog v-model="showVueCode"
                class="pre-viewer"
                title="预览"
@@ -42,7 +44,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, toRaw } from "vue";
+import { computed, ref, toRaw, nextTick } from "vue";
 import { useRouter } from "vue-router";
 import { Coin, Connection, Document } from "@element-plus/icons-vue";
 import { ElMessage, ElMessageBox } from "element-plus";
@@ -58,19 +60,22 @@ import type { MContainer, MNode } from "@tmagic/schema";
 import { NodeType } from "@tmagic/schema";
 import { CustomizeMoveableOptionsCallbackConfig } from "@tmagic/stage";
 import { asyncLoadJs } from "@tmagic/utils";
-
 import VueCodeEditor from "../../../packages/editor/src/components/VueCodeEditor.vue";
 import { transVue } from "../../../packages/editor/src/utils/transvue";
 import DeviceGroup from "../components/DeviceGroup.vue";
 import componentGroupList from "../configs/componentGroupList";
 import dsl from "../configs/dsl";
-
+import { TMagicDialog, tMagicMessage, tMagicMessageBox } from "@tmagic/design";
+import { uaMap } from "../const";
 const { VITE_RUNTIME_PATH, VITE_ENTRY_PATH } = import.meta.env;
 const runtimeUrl = `${VITE_RUNTIME_PATH}/playground/index.html`;
 const router = useRouter();
 const editor = ref<InstanceType<typeof TMagicEditor>>();
 const previewVisible = ref(false);
-const oldValue = ref(localStorage.getItem('magicDSL'));
+const oldValue = ref(localStorage.getItem("magicDSL"));
+const iframe = ref<HTMLIFrameElement>();
+const deviceGroup = ref<InstanceType<typeof DeviceGroup>>();
+
 let value = ref();
 
 if (oldValue.value != null) {
@@ -90,6 +95,8 @@ const defaultSelected = ref(dsl.items[0].id);
 const propsValues = ref<Record<string, any>>({});
 const propsConfigs = ref<Record<string, any>>({});
 const eventMethodList = ref<Record<string, any>>({});
+
+
 const stageRect = ref({
   // width: 1600,
   // height: 1280,
@@ -140,7 +147,7 @@ const menu: MenuBarData = {
       type: "button",
       text: "出码",
       icon: Connection,
-      handler: async (services) => {        
+      handler: async (services) => {
         if (services?.editorService.get("modifiedNodeIds").size > 0) {
           try {
             await ElMessageBox.confirm(
@@ -171,7 +178,7 @@ const menu: MenuBarData = {
       handler: async (services) => {
         if (services?.editorService.get("modifiedNodeIds").size > 0) {
           try {
-            await ElMessageBox.confirm(
+            await tMagicMessageBox.confirm(
               "有修改未保存，是否先保存再预览",
               "提示",
               {
@@ -181,12 +188,25 @@ const menu: MenuBarData = {
               }
             );
             save();
-            ElMessage.success("保存成功");
+            tMagicMessage.success("保存成功");
           } catch (e) {
             console.error(e);
           }
         }
         previewVisible.value = true;
+
+        await nextTick();
+
+        if (!iframe.value?.contentWindow || !deviceGroup.value?.viewerDevice)
+          return;
+        Object.defineProperty(
+          iframe.value.contentWindow.navigator,
+          "userAgent",
+          {
+            value: uaMap[deviceGroup.value.viewerDevice],
+            writable: true,
+          }
+        );
       },
     },
     {
@@ -202,22 +222,22 @@ const menu: MenuBarData = {
       type: "button",
       text: "初始化",
       icon: Coin,
-      handler:async () => {
+      handler: async () => {
         try {
-            await ElMessageBox.confirm(
-              "初始化后所有页面都会消失，不可恢复，确定要初始化？",
-              "提示",
-              {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
-                type: "warning",
-              }
-            );
-            save();
-            ElMessage.success("保存成功");
-          } catch (e) {
-            console.error(e);
-          }
+          await ElMessageBox.confirm(
+            "初始化后所有页面都会消失，不可恢复，确定要初始化？",
+            "提示",
+            {
+              confirmButtonText: "确定",
+              cancelButtonText: "取消",
+              type: "warning",
+            }
+          );
+          save();
+          ElMessage.success("保存成功");
+        } catch (e) {
+          console.error(e);
+        }
         value.value = ref(dsl).value;
         console.log(ref(dsl).value);
 

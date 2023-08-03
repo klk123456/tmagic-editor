@@ -1,19 +1,22 @@
 <template>
-  <TMagicDialog
-    :model-value="true"
+  <TMagicDrawer
     class="code-editor-dialog"
+    :model-value="true"
     :title="currentTitle"
-    :fullscreen="true"
-    :close-on-press-escape="false"
+    :close-on-press-escape="true"
     :append-to-body="true"
     :show-close="false"
+    :close-on-click-modal="true"
+    :size="size"
+    :before-close="handleClose"
   >
-    <Layout v-model:left="left" :min-left="45" class="code-editor-layout">
+    <SplitView v-model:left="left" :min-left="45" class="code-editor-layout">
       <!-- 右侧区域 -->
       <template #center>
         <div v-if="!isEmpty(codeConfig)" class="m-editor-code-block-editor-panel">
           <slot name="code-block-edit-panel-header" :id="id"></slot>
           <FunctionEditor
+            ref="functionEditor"
             v-if="codeConfig"
             :id="id"
             :name="codeConfig.name"
@@ -25,22 +28,26 @@
           ></FunctionEditor>
         </div>
       </template>
-    </Layout>
-  </TMagicDialog>
+    </SplitView>
+  </TMagicDrawer>
 </template>
 
-<script lang="ts" setup name="MEditorCodeBlockEditor">
+<script lang="ts" setup>
 import { computed, inject, reactive, ref, watchEffect } from 'vue';
 import { cloneDeep, forIn, isEmpty } from 'lodash-es';
 
-import { TMagicDialog } from '@tmagic/design';
+import { TMagicDrawer } from '@tmagic/design';
 import { ColumnConfig } from '@tmagic/form';
 import { CodeBlockContent } from '@tmagic/schema';
 
-import FunctionEditor from '../../../components/FunctionEditor.vue';
-import Layout from '../../../components/Layout.vue';
-import type { ListState, Services } from '../../../type';
-import { serializeConfig } from '../../../utils/editor';
+import FunctionEditor from '@editor/components/FunctionEditor.vue';
+import SplitView from '@editor/components/SplitView.vue';
+import type { ListState, Services } from '@editor/type';
+import { serializeConfig } from '@editor/utils/editor';
+
+defineOptions({
+  name: 'MEditorCodeBlockEditor',
+});
 
 const services = inject<Services>('services');
 const codeOptions = inject('codeOptions', {});
@@ -48,6 +55,8 @@ const codeOptions = inject('codeOptions', {});
 defineProps<{
   paramsColConfig?: ColumnConfig;
 }>();
+
+const size = computed(() => globalThis.document.body.clientWidth - (services?.uiService.get('columnWidth').left || 0));
 
 const left = ref(200);
 const currentTitle = ref('');
@@ -81,4 +90,11 @@ watchEffect(async () => {
   });
   currentTitle.value = state.codeList[0]?.name || '';
 });
+
+const functionEditor = ref<InstanceType<typeof FunctionEditor>>();
+
+const handleClose = async () => {
+  // 触发codeDraftEditor组件关闭事件
+  await functionEditor.value?.codeDraftEditor?.close();
+};
 </script>

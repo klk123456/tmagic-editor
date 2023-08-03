@@ -25,13 +25,13 @@
       @addDiffCount="onAddDiffCount()"
     ></MFieldsGroupListItem>
 
-    <TMagicButton @click="addHandler" size="small" :disabled="disabled" v-if="addable">添加组</TMagicButton>
+    <TMagicButton @click="addHandler" size="small" :disabled="disabled" v-if="addable">新增</TMagicButton>
 
     <TMagicButton :icon="Grid" size="small" @click="toggleMode" v-if="config.enableToggleMode">切换为表格</TMagicButton>
   </div>
 </template>
 
-<script setup lang="ts" name="MFormGroupList">
+<script setup lang="ts">
 import { computed, inject } from 'vue';
 import { Grid } from '@element-plus/icons-vue';
 
@@ -41,6 +41,10 @@ import { FormState, GroupListConfig } from '../schema';
 import { initValue } from '../utils/form';
 
 import MFieldsGroupListItem from './GroupListItem.vue';
+
+defineOptions({
+  name: 'MFormGroupList',
+});
 
 const props = defineProps<{
   model: any;

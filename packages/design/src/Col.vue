@@ -1,19 +1,24 @@
 <template>
-  <component class="tmagic-design-col" :is="uiComponent.component" v-bind="uiProps">
+  <component class="tmagic-design-col" :is="uiComponent" v-bind="uiProps">
     <slot></slot>
   </component>
 </template>
 
-<script setup lang="ts" name="TMCol">
+<script setup lang="ts">
 import { computed } from 'vue';
 
 import { getConfig } from './config';
+import type { ColProps } from './types';
 
-const props = defineProps<{
-  span?: number;
-}>();
+defineOptions({
+  name: 'TMCol',
+});
 
-const uiComponent = getConfig('components').col;
+const props = defineProps<ColProps>();
 
-const uiProps = computed(() => uiComponent.props(props));
+const ui = getConfig('components')?.col;
+
+const uiComponent = ui?.component || 'el-col';
+
+const uiProps = computed(() => ui?.props(props) || props);
 </script>

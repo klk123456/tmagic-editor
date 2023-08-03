@@ -1,7 +1,7 @@
 <template>
   <component
     class="tmagic-design-tabs"
-    :is="uiComponent.component"
+    :is="uiComponent"
     v-bind="uiProps"
     @tab-click="tabClickHandler"
     @tab-add="onTabAdd"
@@ -14,21 +14,23 @@
   </component>
 </template>
 
-<script setup lang="ts" name="TMTabs">
+<script setup lang="ts">
 import { computed } from 'vue';
 
 import { getConfig } from './config';
+import type { TabsProps } from './types';
 
-const props = defineProps<{
-  type?: string;
-  editable?: boolean;
-  tabPosition?: string;
-  modelValue?: string | number;
-}>();
+defineOptions({
+  name: 'TMTabs',
+});
 
-const uiComponent = getConfig('components').tabs;
+const props = defineProps<TabsProps>();
 
-const uiProps = computed(() => uiComponent.props(props));
+const ui = getConfig('components')?.tabs;
+
+const uiComponent = ui?.component || 'el-tabs';
+
+const uiProps = computed(() => ui?.props(props) || props);
 
 const emit = defineEmits(['tab-click', 'tab-add', 'tab-remove', 'update:model-value']);
 

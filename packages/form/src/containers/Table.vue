@@ -122,7 +122,7 @@
       </TMagicTooltip>
       <slot></slot>
       <TMagicButton v-if="addable" size="small" type="primary" :disabled="disabled" plain @click="newHandler()"
-        >添加</TMagicButton
+        >新增一行</TMagicButton
       >
       &nbsp;
       <TMagicButton
@@ -174,7 +174,7 @@
   </div>
 </template>
 
-<script setup lang="ts" name="MFormTable">
+<script setup lang="ts">
 import { computed, inject, onMounted, ref, toRefs, watchEffect } from 'vue';
 import { ArrowDown, ArrowUp, Delete, FullScreen, Grid } from '@element-plus/icons-vue';
 import { cloneDeep } from 'lodash-es';
@@ -196,6 +196,10 @@ import { ColumnConfig, FormState, SortProp, TableConfig } from '../schema';
 import { display as displayFunc, initValue } from '../utils/form';
 
 import Container from './Container.vue';
+
+defineOptions({
+  name: 'MFormTable',
+});
 
 const props = withDefaults(
   defineProps<{
@@ -272,11 +276,8 @@ const foreUpdate = () => {
 };
 
 const swapArray = (index1: number, index2: number) => {
-  [props.model[modelName.value][index1]] = props.model[modelName.value].splice(
-    index2,
-    1,
-    props.model[modelName.value][index1],
-  );
+  props.model[modelName.value].splice(index1, 0, props.model[modelName.value].splice(index2, 1)[0]);
+
   if (props.sortKey) {
     for (let i = props.model[modelName.value].length - 1, v = 0; i >= 0; i--, v++) {
       props.model[modelName.value][v][props.sortKey] = i;
@@ -537,7 +538,7 @@ const clearHandler = () => {
 };
 
 const excelHandler = (file: any) => {
-  if (!file || !file.raw) {
+  if (!file?.raw) {
     return false;
   }
   const reader = new FileReader();

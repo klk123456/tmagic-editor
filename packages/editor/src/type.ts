@@ -18,7 +18,7 @@
 
 import type { Component } from 'vue';
 
-import type { FormConfig } from '@tmagic/form';
+import type { FormConfig, FormItem } from '@tmagic/form';
 import type { CodeBlockContent, CodeBlockDSL, Id, MApp, MContainer, MNode, MPage } from '@tmagic/schema';
 import type StageCore from '@tmagic/stage';
 import type {
@@ -30,9 +30,12 @@ import type {
 
 import type { CodeBlockService } from './services/codeBlock';
 import type { ComponentListService } from './services/componentList';
+import type { DataSourceService } from './services/dataSource';
+import type { DepService } from './services/dep';
 import type { EditorService } from './services/editor';
 import type { EventsService } from './services/events';
 import type { HistoryService } from './services/history';
+import type { KeybindingService } from './services/keybinding';
 import type { PropsService } from './services/props';
 import type { StorageService } from './services/storage';
 import type { UiService } from './services/ui';
@@ -42,6 +45,7 @@ export type BeforeAdd = (config: MNode, parent: MContainer) => Promise<MNode> | 
 export type GetConfig = (config: FormConfig) => Promise<FormConfig> | FormConfig;
 
 export interface InstallOptions {
+  parseDSL: (dsl: string) => MApp;
   [key: string]: any;
 }
 
@@ -54,6 +58,9 @@ export interface Services {
   componentListService: ComponentListService;
   uiService: UiService;
   codeBlockService: CodeBlockService;
+  depService: DepService;
+  dataSourceService: DataSourceService;
+  keybindingService: KeybindingService;
 }
 
 export interface StageOptions {
@@ -262,7 +269,7 @@ export interface SideComponent extends MenuComponent {
  * layer: 已选组件树
  * code-block: 代码块
  */
-export type SideItem = 'component-list' | 'layer' | 'code-block' | SideComponent;
+export type SideItem = 'component-list' | 'layer' | 'code-block' | 'data-source' | SideComponent;
 
 /** 工具栏 */
 export interface SideBarData {
@@ -339,8 +346,6 @@ export type CodeState = {
   combineIds: string[];
   /** 为业务逻辑预留的不可删除的代码块列表，由业务逻辑维护（如代码块上线后不可删除） */
   undeletableList: Id[];
-  /** 代码块和组件的绑定关系 */
-  relations: CodeRelation;
 };
 
 export type HookData = {
@@ -409,4 +414,74 @@ export interface HistoryState {
   pageSteps: Record<Id, UndoRedo<StepValue>>;
   canRedo: boolean;
   canUndo: boolean;
+}
+
+export interface EventSelectConfig {
+  name: string;
+  type: 'event-select';
+  /** 事件名称表单配置 */
+  eventNameConfig?: FormItem;
+  /** 动作类型配置 */
+  actionTypeConfig?: FormItem;
+  /** 联动组件配置 */
+  targetCompConfig?: FormItem;
+  /** 联动组件动作配置 */
+  compActionConfig?: FormItem;
+  /** 联动代码配置 */
+  codeActionConfig?: FormItem;
+}
+
+export enum KeyBindingCommand {
+  /** 复制 */
+  COPY_NODE = 'tmagic-system-copy-node',
+  /** 粘贴 */
+  PASTE_NODE = 'tmagic-system-paste-node',
+  /** 删除 */
+  DELETE_NODE = 'tmagic-system-delete-node',
+  /** 剪切 */
+  CUT_NODE = 'tmagic-system-cut-node',
+  /** 撤销 */
+  UNDO = 'tmagic-system-undo',
+  /** 重做 */
+  REDO = 'tmagic-system-redo',
+  /** 放大 */
+  ZOOM_IN = 'tmagic-system-zoom-in',
+  /** 缩小 */
+  ZOOM_OUT = 'tmagic-system-zoom-out',
+  /** 缩放到实际大小 */
+  ZOOM_RESET = 'tmagic-system-zoom-reset',
+  /** 缩放以适应 */
+  ZOOM_FIT = 'tmagic-system-zoom-fit',
+  /** 向上移动1px */
+  MOVE_UP_1 = 'tmagic-system-move-up-1',
+  /** 向下移动1px */
+  MOVE_DOWN_1 = 'tmagic-system-move-down-1',
+  /** 向左移动1px */
+  MOVE_LEFT_1 = 'tmagic-system-move-left-1',
+  /** 向右移动1px */
+  MOVE_RIGHT_1 = 'tmagic-system-move-right-1',
+  /** 向上移动10px */
+  MOVE_UP_10 = 'tmagic-system-move-up-10',
+  /** 向下移动10px */
+  MOVE_DOWN_10 = 'tmagic-system-move-down-10',
+  /** 向左移动10px */
+  MOVE_LEFT_10 = 'tmagic-system-move-left-10',
+  /** 向右移动10px */
+  MOVE_RIGHT_10 = 'tmagic-system-move-right-10',
+  /** 切换组件 */
+  SWITCH_NODE = 'tmagic-system-switch-node',
+}
+
+export interface KeyBindingItem {
+  command: KeyBindingCommand | string;
+  keybinding?: string | string[];
+  when: [string, 'keyup' | 'keydown'][];
+}
+
+export interface KeyBindingCacheItem {
+  type: string;
+  command: KeyBindingCommand | string;
+  keybinding?: string | string[];
+  eventType: 'keyup' | 'keydown';
+  binded: boolean;
 }

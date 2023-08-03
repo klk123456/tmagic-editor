@@ -1,21 +1,19 @@
 <template>
-  <el-radio-group size="small" v-model="viewerDevice" :class="viewerDevice" @change="deviceSelect">
-    <el-radio-button label="pc">PC</el-radio-button>
-    <el-radio-button label="phone">Phone</el-radio-button>
-    <el-radio-button label="pad">Pad</el-radio-button>
-  </el-radio-group>
+  <TMagicRadioGroup size="small" v-model="viewerDevice" :class="viewerDevice" @change="deviceSelect">
+    <TMagicRadioButton label="phone">Phone</TMagicRadioButton>
+    <TMagicRadioButton label="pad">Pad</TMagicRadioButton>
+    <TMagicRadioButton label="pc">PC</TMagicRadioButton>
+  </TMagicRadioGroup>
 </template>
 
-<script lang="ts">
-import { defineComponent, nextTick, ref } from 'vue';
+<script lang="ts" setup>
+import { nextTick, ref } from 'vue';
 
+import Core from '@tmagic/core';
+import { TMagicRadioButton, TMagicRadioGroup } from '@tmagic/design';
 import { editorService } from '@tmagic/editor';
 
-enum DeviceType {
-  Phone = 'phone',
-  Pad = 'pad',
-  PC = 'pc',
-}
+import { DeviceType, uaMap } from '../const';
 
 const devH: Record<DeviceType, number> = {
   phone: 817,
@@ -33,49 +31,50 @@ const getDeviceHeight = (viewerDevice: DeviceType) => devH[viewerDevice];
 
 const getDeviceWidth = (viewerDevice: DeviceType) => devW[viewerDevice];
 
-export default defineComponent({
-  props: {
+withDefaults(
+  defineProps<{
     modelValue: {
-      type: Object,
-      default: () => ({
-        width: 375,
-        height: 817,
-      }),
-    },
-  },
-
-  emits: ['update:modelValue'],
-
-  setup(props, { emit }) {
-    const calcFontsize = (width: number) => {
-      const iframe = editorService.get('stage')?.renderer.iframe;
-      // console.log(iframe);
-
-      if (!iframe?.contentWindow) return;
-      if (!iframe?.contentWindow.appInstance) return;
-      iframe.contentWindow.appInstance.designWidth = width;
+      width: number;
+      height: number;
     };
-
-    const viewerDevice = ref(DeviceType.Phone);
-    function deviceSelect(device: DeviceType) {
-      const width = getDeviceWidth(device);
-      const height = getDeviceHeight(device);
-      emit('update:modelValue', {
-        width,
-        height,
-      });
-      calcFontsize(width);
-    }
-    // nextTick(() => {
-    //   viewerDevice.value = DeviceType.PC;
-    //   deviceSelect(viewerDevice.value);
-    // });
-
-    return {
-      viewerDevice,
-      deviceSelect,
-    };
+  }>(),
+  {
+    modelValue: () => ({
+      width: 375,
+      height: 817,
+    }),
   },
+);
+
+const emit = defineEmits(['update:modelValue']);
+
+const calcFontsize = (width: number) => {
+  const iframe = editorService.get('stage')?.renderer.iframe;
+  if (!iframe?.contentWindow) return;
+
+  const app: Core = (iframe.contentWindow as any).appInstance;
+
+  app?.setEnv(uaMap[viewerDevice.value]);
+
+  app.setDesignWidth(app.env.isWeb ? width : 375);
+};
+
+const viewerDevice = ref(DeviceType.Phone);
+
+const deviceSelect = async (device: DeviceType) => {
+  const width = getDeviceWidth(device);
+  const height = getDeviceHeight(device);
+  emit('update:modelValue', {
+    width,
+    height,
+  });
+
+  await nextTick();
+  calcFontsize(width);
+};
+
+defineExpose({
+  viewerDevice,
 });
 </script>
 

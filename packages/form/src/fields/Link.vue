@@ -16,7 +16,7 @@
   </div>
 </template>
 
-<script lang="ts" setup name="MFormLink">
+<script lang="ts" setup>
 import { computed, inject, ref } from 'vue';
 
 import { TMagicButton } from '@tmagic/design';
@@ -24,6 +24,10 @@ import { TMagicButton } from '@tmagic/design';
 import FormDialog from '../FormDialog.vue';
 import { FormState, LinkConfig } from '../schema';
 import { useAddField } from '../utils/useAddField';
+
+defineOptions({
+  name: 'MFormLink',
+});
 
 const props = defineProps<{
   config: LinkConfig;
@@ -34,6 +38,7 @@ const props = defineProps<{
   prop: string;
   disabled?: boolean;
   size?: 'large' | 'default' | 'small';
+  lastValues?: Record<string, any>;
 }>();
 
 const emit = defineEmits(['change']);

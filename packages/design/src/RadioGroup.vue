@@ -1,7 +1,7 @@
 <template>
   <component
     class="tmagic-design-radio-group"
-    :is="uiComponent.component"
+    :is="uiComponent"
     v-bind="uiProps"
     @change="changeHandler"
     @update:modelValue="updateModelValue"
@@ -10,20 +10,23 @@
   </component>
 </template>
 
-<script setup lang="ts" name="TMRadioGroup">
+<script setup lang="ts">
 import { computed } from 'vue';
 
 import { getConfig } from './config';
+import type { RadioGroupProps } from './types';
 
-const props = defineProps<{
-  modelValue?: string | number | boolean;
-  disabled?: boolean;
-  size?: 'large' | 'default' | 'small';
-}>();
+defineOptions({
+  name: 'TMRadioGroup',
+});
 
-const uiComponent = getConfig('components').radioGroup;
+const props = defineProps<RadioGroupProps>();
 
-const uiProps = computed(() => uiComponent.props(props));
+const ui = getConfig('components')?.radioGroup;
+
+const uiComponent = ui?.component || 'el-radio-group';
+
+const uiProps = computed(() => ui?.props(props) || props);
 
 const emit = defineEmits(['change', 'update:modelValue']);
 

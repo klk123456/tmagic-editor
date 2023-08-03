@@ -21,6 +21,7 @@
       "@tmagic/*": ["packages/*/src"],
       "@editor/*": ["packages/editor/src/*"],
       "@form/*": ["packages/form/src/*"],
+      "@data-source/*": ["packages/data-source/src/*"],
     },
     "types": [
       "node",

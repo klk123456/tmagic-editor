@@ -5,8 +5,8 @@
     v-loading="loading"
     class="m-select"
     ref="tMagicSelect"
-    clearable
-    filterable
+    :clearable="typeof config.clearable !== 'undefined' ? config.clearable : true"
+    :filterable="typeof config.filterable !== 'undefined' ? config.filterable : true"
     :popper-class="`m-select-popper ${popperClass}`"
     :size="size"
     :remote="remote"
@@ -25,10 +25,11 @@
   </TMagicSelect>
 </template>
 
-<script lang="ts" setup name="MFormSelect">
+<script lang="ts" setup>
 import { inject, onBeforeMount, Ref, ref, watch, watchEffect } from 'vue';
 
 import { TMagicSelect } from '@tmagic/design';
+import { getValueByKeyPath } from '@tmagic/utils';
 
 import { FormState, SelectConfig, SelectGroupOption, SelectOption } from '../schema';
 import { getConfig } from '../utils/config';
@@ -36,6 +37,10 @@ import { useAddField } from '../utils/useAddField';
 
 import SelectOptionGroups from './SelectOptionGroups.vue';
 import SelectOptions from './SelectOptions.vue';
+
+defineOptions({
+  name: 'MFormSelect',
+});
 
 const props = defineProps<{
   config: SelectConfig;
@@ -46,6 +51,7 @@ const props = defineProps<{
   prop: string;
   disabled?: boolean;
   size?: 'large' | 'default' | 'small';
+  lastValues?: Record<string, any>;
 }>();
 
 const emit = defineEmits(['change']);
@@ -76,13 +82,17 @@ const equalValue = (value: any, v: any): boolean => {
 };
 
 const mapOptions = (data: any[]) => {
-  const { option } = props.config;
-  const { text } = option;
-  const { value } = option;
+  const {
+    option = {
+      text: 'text',
+      value: 'value',
+    },
+  } = props.config;
+  const { text = 'text', value = 'value' } = option;
 
   return data.map((item) => ({
-    text: typeof text === 'function' ? text(item) : item[text || 'text'],
-    value: typeof value === 'function' ? value(item) : item[value || 'value'],
+    text: typeof text === 'function' ? text(item) : item[text],
+    value: typeof value === 'function' ? value(item) : item[value],
   }));
 };
 
@@ -97,8 +107,10 @@ const getOptions = async () => {
 
   let items: SelectOption[] | SelectGroupOption[] = [];
 
-  const { config } = props;
-  const { option } = config;
+  const { option } = props.config;
+
+  if (!option) return [];
+
   const { root = '', totalKey = 'total' } = option;
   let { body = {}, url } = option;
 
@@ -156,12 +168,9 @@ const getOptions = async () => {
     });
   }
 
-  const optionsData = root.split('.').reduce((accumulator, currentValue: any) => accumulator[currentValue], res);
+  const optionsData = getValueByKeyPath(root, res);
 
-  const resTotal = globalThis.parseInt(
-    totalKey.split('.').reduce((accumulator, currentValue: any) => accumulator[currentValue], res),
-    10,
-  );
+  const resTotal = globalThis.parseInt(getValueByKeyPath(totalKey, res), 10);
   if (resTotal > 0) {
     total.value = resTotal;
   }
@@ -221,8 +230,10 @@ const getInitLocalOption = async () => {
 const getInitOption = async () => {
   if (!props.model) return [];
 
-  const { config } = props;
-  const { option } = config;
+  const { option } = props.config;
+
+  if (!option) return [];
+
   const { root = '', initRoot = '' } = option;
   let { initBody = {} } = option;
 
@@ -282,9 +293,7 @@ const getInitOption = async () => {
     });
   }
 
-  let initData = (initRoot || root)
-    .split('.')
-    .reduce((accumulator, currentValue: any) => accumulator[currentValue], res);
+  let initData = getValueByKeyPath(initRoot || root, res);
   if (initData) {
     if (!Array.isArray(initData)) {
       initData = [initData];

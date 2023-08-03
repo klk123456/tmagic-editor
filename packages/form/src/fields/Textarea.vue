@@ -12,13 +12,17 @@
   </TMagicInput>
 </template>
 
-<script lang="ts" setup name="MFormTextarea">
+<script lang="ts" setup>
 import { inject } from 'vue';
 
 import { TMagicInput } from '@tmagic/design';
 
 import { FormState, TextareaConfig } from '../schema';
 import { useAddField } from '../utils/useAddField';
+
+defineOptions({
+  name: 'MFormTextarea',
+});
 
 const props = defineProps<{
   config: TextareaConfig;
@@ -29,6 +33,7 @@ const props = defineProps<{
   prop: string;
   disabled?: boolean;
   size?: 'large' | 'default' | 'small';
+  lastValues?: Record<string, any>;
 }>();
 
 const emit = defineEmits(['change', 'input']);

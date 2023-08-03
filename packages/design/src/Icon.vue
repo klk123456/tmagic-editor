@@ -1,11 +1,16 @@
 <template>
-  <component class="tmagic-design-icon" :is="uiComponent.component">
+  <component class="tmagic-design-icon" :is="uiComponent">
     <slot></slot>
   </component>
 </template>
 
-<script setup lang="ts" name="TMIcon">
+<script setup lang="ts">
 import { getConfig } from './config';
 
-const uiComponent = getConfig('components').icon;
+defineOptions({
+  name: 'TMIcon',
+});
+
+const ui = getConfig('components')?.icon;
+const uiComponent = ui?.component || 'el-icon';
 </script>

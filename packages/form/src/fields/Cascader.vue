@@ -14,7 +14,7 @@
   ></TMagicCascader>
 </template>
 
-<script setup lang="ts" name="MFormCascader">
+<script setup lang="ts">
 import { inject, ref, watchEffect } from 'vue';
 
 import { TMagicCascader } from '@tmagic/design';
@@ -22,6 +22,10 @@ import { TMagicCascader } from '@tmagic/design';
 import { CascaderConfig, FormState } from '../schema';
 import { getConfig } from '../utils/config';
 import { useAddField } from '../utils/useAddField';
+
+defineOptions({
+  name: 'MFormCascader',
+});
 
 const props = defineProps<{
   config: CascaderConfig;
@@ -32,6 +36,7 @@ const props = defineProps<{
   prop: string;
   disabled?: boolean;
   size?: 'large' | 'default' | 'small';
+  lastValues?: Record<string, any>;
 }>();
 
 const emit = defineEmits(['change']);
@@ -85,7 +90,7 @@ if (typeof props.config.options === 'function' && props.model && mForm) {
   watchEffect(
     () => (options.value = (props.config.options as Function)(mForm, { model: props.model, formValues: mForm.values })),
   );
-} else if (!props.config.options || !props.config.options.length || props.config.remote) {
+} else if (!props.config.options?.length || props.config.remote) {
   Promise.resolve(setRemoteOptions());
 }
 

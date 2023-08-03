@@ -1,7 +1,7 @@
 <template>
   <component
     class="tmagic-design-input-number"
-    :is="uiComponent.component"
+    :is="uiComponent"
     v-bind="uiProps"
     @change="changeHandler"
     @input="inputHandler"
@@ -9,26 +9,23 @@
   ></component>
 </template>
 
-<script setup lang="ts" name="TMInputNumber">
+<script setup lang="ts">
 import { computed } from 'vue';
 
 import { getConfig } from './config';
+import type { InputNumberProps } from './types';
 
-const props = defineProps<{
-  modelValue?: string | number | boolean;
-  clearable?: boolean;
-  controlsPosition?: string;
-  disabled?: boolean;
-  placeholder?: string;
-  step?: number;
-  min?: number;
-  max?: number;
-  size?: 'large' | 'default' | 'small';
-}>();
+defineOptions({
+  name: 'TMInputNumber',
+});
 
-const uiComponent = getConfig('components').inputNumber;
+const props = defineProps<InputNumberProps>();
 
-const uiProps = computed(() => uiComponent.props(props));
+const ui = getConfig('components')?.inputNumber;
+
+const uiComponent = ui?.component || 'el-input-number';
+
+const uiProps = computed(() => ui?.props(props) || props);
 
 const emit = defineEmits(['change', 'input', 'update:modelValue']);
 

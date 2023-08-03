@@ -2,6 +2,7 @@
   <ScrollViewer
     class="m-editor-stage"
     ref="stageWrap"
+    tabindex="-1"
     :width="stageRect?.width"
     :height="stageRect?.height"
     :wrap-width="stageContainerRect?.width"
@@ -11,6 +12,7 @@
       width: 60,
       height: 50,
     }"
+    @click="stageWrap?.container?.focus()"
   >
     <div
       class="m-editor-stage-container"
@@ -26,18 +28,23 @@
   </ScrollViewer>
 </template>
 
-<script lang="ts" setup name="MEditorStage">
+<script lang="ts" setup>
 import { computed, inject, markRaw, nextTick, onMounted, onUnmounted, ref, toRaw, watch, watchEffect } from 'vue';
 import { cloneDeep } from 'lodash-es';
 
 import type { MContainer } from '@tmagic/schema';
 import StageCore, { calcValueByFontsize, getOffset, Runtime } from '@tmagic/stage';
 
-import ScrollViewer from '../../components/ScrollViewer.vue';
-import { Layout, MenuButton, MenuComponent, Services, StageOptions } from '../../type';
-import { useStage } from '../../utils/stage';
+import ScrollViewer from '@editor/components/ScrollViewer.vue';
+import { Layout, MenuButton, MenuComponent, Services, StageOptions } from '@editor/type';
+import { getConfig } from '@editor/utils/config';
+import { useStage } from '@editor/utils/stage';
 
 import ViewerMenu from './ViewerMenu.vue';
+
+defineOptions({
+  name: 'MEditorStage',
+});
 
 defineProps<{
   stageContentMenu: (MenuButton | MenuComponent)[];
@@ -69,6 +76,10 @@ watchEffect(() => {
   if (!(stageOptions?.runtimeUrl || stageOptions?.render) || !root.value) return;
 
   stage = useStage(stageOptions);
+
+  stage.on('select', () => {
+    stageWrap.value?.container?.focus();
+  });
 
   services?.editorService.set('stage', markRaw(stage));
 
@@ -116,13 +127,17 @@ const resizeObserver = new ResizeObserver((entries) => {
 });
 
 onMounted(() => {
-  stageWrap.value?.container && resizeObserver.observe(stageWrap.value.container);
+  if (stageWrap.value?.container) {
+    resizeObserver.observe(stageWrap.value.container);
+    services?.keybindingService.registeEl('stage', stageWrap.value.container);
+  }
 });
 
 onUnmounted(() => {
   stage?.destroy();
   resizeObserver.disconnect();
   services?.editorService.set('stage', null);
+  services?.keybindingService.unregisteEl('stage');
 });
 
 const contextmenuHandler = (e: MouseEvent) => {
@@ -132,9 +147,8 @@ const contextmenuHandler = (e: MouseEvent) => {
 
 const dragoverHandler = (e: DragEvent) => {
   e.preventDefault();
-  if (e.dataTransfer) {
-    e.dataTransfer.dropEffect = 'move';
-  }
+  if (!e.dataTransfer) return;
+  e.dataTransfer.dropEffect = 'move';
 };
 
 const dropHandler = async (e: DragEvent) => {
@@ -149,8 +163,16 @@ const dropHandler = async (e: DragEvent) => {
   }
 
   if (e.dataTransfer && parent && stageContainer.value && stage) {
-    // eslint-disable-next-line no-eval
-    const config = eval(`(${e.dataTransfer.getData('data')})`);
+    const parseDSL = getConfig('parseDSL');
+
+    const data = e.dataTransfer.getData('text/json');
+
+    if (!data) return;
+
+    const config = parseDSL(`(${data})`);
+
+    if (!config) return;
+
     const layout = await services?.editorService.getLayout(parent);
 
     const containerRect = stageContainer.value.getBoundingClientRect();

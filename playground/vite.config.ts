@@ -50,6 +50,7 @@ export default defineConfig({
         replacement: path.join(__dirname, '../packages/editor/src/theme/index.scss'),
       },
       { find: /^@tmagic\/core/, replacement: path.join(__dirname, '../packages/core/src/index.ts') },
+      { find: /^@editor/, replacement: path.join(__dirname, '../packages/editor/src/') },
       { find: /^@tmagic\/editor/, replacement: path.join(__dirname, '../packages/editor/src/index.ts') },
       { find: /^@tmagic\/schema/, replacement: path.join(__dirname, '../packages/schema/src/index.ts') },
       { find: /^@tmagic\/form/, replacement: path.join(__dirname, '../packages/form/src/index.ts') },
@@ -57,6 +58,8 @@ export default defineConfig({
       { find: /^@tmagic\/stage/, replacement: path.join(__dirname, '../packages/stage/src/index.ts') },
       { find: /^@tmagic\/utils/, replacement: path.join(__dirname, '../packages/utils/src/index.ts') },
       { find: /^@tmagic\/design/, replacement: path.join(__dirname, '../packages/design/src/index.ts') },
+      { find: /^@tmagic\/data-source/, replacement: path.join(__dirname, '../packages/data-source/src/index.ts') },
+      { find: /^@data-source/, replacement: path.join(__dirname, '../packages/data-source/src') },
       {
         find: /^@tmagic\/element-plus-adapter/,
         replacement: path.join(__dirname, '../packages/element-plus-adapter/src/index.ts'),

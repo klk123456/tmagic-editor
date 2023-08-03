@@ -1,5 +1,5 @@
 <template>
-  <component class="tmagic-design-tab-pane" :is="uiComponent.component" v-bind="uiProps">
+  <component class="tmagic-design-tab-pane" :is="uiComponent" v-bind="uiProps">
     <template #default>
       <slot></slot>
     </template>
@@ -10,17 +10,21 @@
   </component>
 </template>
 
-<script setup lang="ts" name="TMTabPane">
+<script setup lang="ts">
 import { computed } from 'vue';
 
 import { getConfig } from './config';
+import type { TabPaneProps } from './types';
 
-const props = defineProps<{
-  name?: string;
-  label?: string;
-  lazy?: boolean;
-}>();
-const uiComponent = getConfig('components').tabPane;
+defineOptions({
+  name: 'TMTabPane',
+});
 
-const uiProps = computed(() => uiComponent.props(props));
+const props = defineProps<TabPaneProps>();
+
+const ui = getConfig('components')?.tabPane;
+
+const uiComponent = ui?.component || 'el-tab-pane';
+
+const uiProps = computed(() => ui?.props(props) || props);
 </script>

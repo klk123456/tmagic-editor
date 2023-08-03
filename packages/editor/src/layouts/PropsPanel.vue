@@ -1,5 +1,5 @@
 <template>
-  <div class="m-editor-props-panel">
+  <div class="m-editor-props-panel" v-show="nodes.length === 1">
     <slot name="props-panel-header"></slot>
     <MForm
       ref="configForm"
@@ -8,19 +8,28 @@
       :size="propsPanelSize"
       :init-values="values"
       :config="curFormConfig"
+      :extend-state="extendState"
       @change="submit"
     ></MForm>
   </div>
 </template>
 
-<script lang="ts" setup name="MEditorPropsPanel">
+<script lang="ts" setup>
 import { computed, getCurrentInstance, inject, onMounted, onUnmounted, ref, watchEffect } from 'vue';
 
 import { tMagicMessage } from '@tmagic/design';
-import type { FormValue } from '@tmagic/form';
+import type { FormState, FormValue } from '@tmagic/form';
 import { MForm } from '@tmagic/form';
 
-import type { Services } from '../type';
+import type { Services } from '@editor/type';
+
+defineOptions({
+  name: 'MEditorPropsPanel',
+});
+
+defineProps<{
+  extendState?: (state: FormState) => Record<string, any> | Promise<Record<string, any>>;
+}>();
 
 const emit = defineEmits(['mounted']);
 
@@ -31,6 +40,7 @@ const configForm = ref<InstanceType<typeof MForm>>();
 const curFormConfig = ref<any>([]);
 const services = inject<Services>('services');
 const node = computed(() => services?.editorService.get('node'));
+const nodes = computed(() => services?.editorService.get('nodes') || []);
 const propsPanelSize = computed(() => services?.uiService.get('propsPanelSize') || 'small');
 const stage = computed(() => services?.editorService.get('stage'));
 
@@ -73,5 +83,5 @@ const submit = async () => {
   }
 };
 
-defineExpose({ submit });
+defineExpose({ configForm, submit });
 </script>

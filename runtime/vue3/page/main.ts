@@ -17,25 +17,27 @@
  */
 
 import { createApp, defineAsyncComponent } from 'vue';
-import ElementPlus from 'element-plus'; // 引入element-plus库
 
 import Core from '@tmagic/core';
 import { getUrlParam } from '@tmagic/utils';
 
 import components from '../.tmagic/async-comp-entry';
 import plugins from '../.tmagic/plugin-entry';
-import MessageBox from '../component/Messagebox.vue';
 
 import request from './utils/request';
 import AppComponent from './App.vue';
 import { getLocalConfig } from './utils';
 
+// import '@tmagic/utils/resetcss.css';
 import 'element-plus/dist/index.css'; // 引入element-plus样式
+import ElementPlus from 'element-plus'; // 引入element-plus库
+import MessageBox from '../component/Messagebox.vue';
 
 const magicApp = createApp(AppComponent);
 magicApp.use(ElementPlus);
-magicApp.use(request);
 magicApp.component('messagebox', MessageBox);
+
+magicApp.use(request);
 
 Object.entries(components).forEach(([type, component]: [string, any]) => {
   magicApp.component(`magic-ui-${type}`, defineAsyncComponent(component));
@@ -45,13 +47,13 @@ Object.values(plugins).forEach((plugin: any) => {
   magicApp.use(plugin);
 });
 
-const designWidth = document.documentElement.getBoundingClientRect().width;
-
 const app = new Core({
-  designWidth,
+  ua: window.navigator.userAgent,
   config: ((getUrlParam('localPreview') ? getLocalConfig() : window.magicDSL) || [])[0] || {},
   curPage: getUrlParam('page'),
 });
+
+app.setDesignWidth(app.env.isWeb ? window.document.documentElement.getBoundingClientRect().width : 375);
 
 magicApp.config.globalProperties.app = app;
 magicApp.provide('app', app);

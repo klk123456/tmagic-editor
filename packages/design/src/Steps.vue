@@ -1,20 +1,24 @@
 <template>
-  <component class="tmagic-design-steps" :is="uiComponent.component" v-bind="uiProps">
+  <component class="tmagic-design-steps" :is="uiComponent" v-bind="uiProps">
     <slot></slot>
   </component>
 </template>
 
-<script setup lang="ts" name="TMSteps">
+<script setup lang="ts">
 import { computed } from 'vue';
 
 import { getConfig } from './config';
+import type { StepsProps } from './types';
 
-const props = defineProps<{
-  active?: number;
-  space?: number | string;
-}>();
+defineOptions({
+  name: 'TMSteps',
+});
 
-const uiComponent = getConfig('components').steps;
+const props = defineProps<StepsProps>();
 
-const uiProps = computed(() => uiComponent.props(props));
+const ui = getConfig('components')?.steps;
+
+const uiComponent = ui?.component || 'el-steps';
+
+const uiProps = computed(() => ui?.props(props) || props);
 </script>

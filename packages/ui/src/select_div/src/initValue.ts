@@ -21,6 +21,7 @@ export default {
   isGray:false,
   isActive:true,
   isRead:true,
+  HyperText: 'select-div',
   style: {
     position: 'absolute',
     width: '17.335vw',

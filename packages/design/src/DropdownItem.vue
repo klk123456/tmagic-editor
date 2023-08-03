@@ -1,22 +1,24 @@
 <template>
-  <component class="tmagic-design-dropdown-item" :is="uiComponent.component" v-bind="uiProps">
+  <component class="tmagic-design-dropdown-item" :is="uiComponent" v-bind="uiProps">
     <slot></slot>
   </component>
 </template>
 
-<script setup lang="ts" name="TMDropdownItem">
+<script setup lang="ts">
 import { computed } from 'vue';
 
 import { getConfig } from './config';
+import type { DropdownItemProps } from './types';
 
-const props = defineProps<{
-  command?: any;
-  disabled?: boolean;
-  divided?: boolean;
-  icon?: any;
-}>();
+defineOptions({
+  name: 'TMDropdownItem',
+});
 
-const uiComponent = getConfig('components').dropdownItem;
+const props = defineProps<DropdownItemProps>();
 
-const uiProps = computed(() => uiComponent.props(props));
+const ui = getConfig('components')?.dropdownItem;
+
+const uiComponent = ui?.component || 'el-dropdown-item';
+
+const uiProps = computed(() => ui?.props(props) || props);
 </script>

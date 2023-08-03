@@ -1,20 +1,24 @@
 <template>
-  <component class="tmagic-design-tag" :is="uiComponent.component" v-bind="uiProps">
+  <component class="tmagic-design-tag" :is="uiComponent" v-bind="uiProps">
     <slot></slot>
   </component>
 </template>
 
-<script setup lang="ts" name="TMTag">
+<script setup lang="ts">
 import { computed } from 'vue';
 
 import { getConfig } from './config';
+import type { TagProps } from './types';
 
-const props = defineProps<{
-  type?: string;
-  disableTransition?: boolean;
-}>();
+defineOptions({
+  name: 'TMTag',
+});
 
-const uiComponent = getConfig('components').tag;
+const props = defineProps<TagProps>();
 
-const uiProps = computed(() => uiComponent.props(props));
+const ui = getConfig('components')?.tag;
+
+const uiComponent = ui?.component || 'el-tag';
+
+const uiProps = computed(() => ui?.props(props) || props);
 </script>

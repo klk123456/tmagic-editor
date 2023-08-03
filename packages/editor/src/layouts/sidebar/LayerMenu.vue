@@ -2,14 +2,17 @@
   <ContentMenu :menu-data="menuData" ref="menu" style="overflow: initial"></ContentMenu>
 </template>
 
-<script lang="ts" setup name="MEditorLayerMenu">
+<script lang="ts" setup>
 import { computed, inject, markRaw, ref } from 'vue';
-import { CopyDocument, Delete, Files, Plus } from '@element-plus/icons-vue';
+import { Files, Plus } from '@element-plus/icons-vue';
 
-import { NodeType } from '@tmagic/schema';
+import ContentMenu from '@editor/components/ContentMenu.vue';
+import type { ComponentGroup, MenuButton, MenuComponent, Services } from '@editor/type';
+import { useCopyMenu, useDeleteMenu, useMoveToMenu, usePasteMenu } from '@editor/utils/content-menu';
 
-import ContentMenu from '../../components/ContentMenu.vue';
-import type { ComponentGroup, MenuButton, MenuComponent, Services } from '../../type';
+defineOptions({
+  name: 'MEditorLayerMenu',
+});
 
 const props = defineProps<{
   layerContentMenu: (MenuButton | MenuComponent)[];
@@ -18,8 +21,7 @@ const props = defineProps<{
 const services = inject<Services>('services');
 const menu = ref<InstanceType<typeof ContentMenu>>();
 const node = computed(() => services?.editorService.get('node'));
-const isRoot = computed(() => node.value?.type === NodeType.ROOT);
-const isPage = computed(() => node.value?.type === NodeType.PAGE);
+const nodes = computed(() => services?.editorService.get('nodes'));
 const componentList = computed(() => services?.componentListService.getList() || []);
 
 const createMenuItems = (group: ComponentGroup): MenuButton[] =>
@@ -78,27 +80,13 @@ const menuData = computed<(MenuButton | MenuComponent)[]>(() => [
     type: 'button',
     text: '新增',
     icon: markRaw(Plus),
-    display: () => node.value?.items,
+    display: () => node.value?.items && nodes.value?.length === 1,
     items: getSubMenuData.value,
   },
-  {
-    type: 'button',
-    text: '复制',
-    icon: markRaw(CopyDocument),
-    display: () => !isRoot.value,
-    handler: () => {
-      node.value && services?.editorService.copy(node.value);
-    },
-  },
-  {
-    type: 'button',
-    text: '删除',
-    icon: markRaw(Delete),
-    display: () => !isRoot.value && !isPage.value,
-    handler: () => {
-      node.value && services?.editorService.remove(node.value);
-    },
-  },
+  useCopyMenu(),
+  usePasteMenu(),
+  useDeleteMenu(),
+  useMoveToMenu(services),
   ...props.layerContentMenu,
 ]);
 

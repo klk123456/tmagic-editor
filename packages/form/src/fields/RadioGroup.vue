@@ -10,11 +10,15 @@
   </TMagicRadioGroup>
 </template>
 
-<script lang="ts" setup name="MFormRadioGroup">
+<script lang="ts" setup>
 import { TMagicRadio, TMagicRadioGroup } from '@tmagic/design';
 
 import { RadioGroupConfig } from '../schema';
 import { useAddField } from '../utils/useAddField';
+
+defineOptions({
+  name: 'MFormRadioGroup',
+});
 
 const props = defineProps<{
   config: RadioGroupConfig;
@@ -25,6 +29,7 @@ const props = defineProps<{
   prop: string;
   disabled?: boolean;
   size?: 'large' | 'default' | 'small';
+  lastValues?: Record<string, any>;
 }>();
 
 const emit = defineEmits(['change']);

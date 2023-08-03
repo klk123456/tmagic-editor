@@ -1,18 +1,20 @@
 <template>
-  <component class="tmagic-design-step" :is="uiComponent.component" v-bind="uiProps" @click="clickHandler">
+  <component class="tmagic-design-step" :is="uiComponent" v-bind="uiProps" @click="clickHandler">
     <slot></slot>
   </component>
 </template>
 
-<script setup lang="ts" name="TMStep">
+<script setup lang="ts">
 import { computed } from 'vue';
 
 import { getConfig } from './config';
+import type { StepProps } from './types';
 
-const props = defineProps<{
-  title?: string;
-  active?: number;
-}>();
+defineOptions({
+  name: 'TMStep',
+});
+
+const props = defineProps<StepProps>();
 
 const emit = defineEmits(['click']);
 
@@ -20,7 +22,9 @@ const clickHandler = (...args: any[]) => {
   emit('click', ...args);
 };
 
-const uiComponent = getConfig('components').step;
+const ui = getConfig('components')?.step;
 
-const uiProps = computed(() => uiComponent.props(props));
+const uiComponent = ui?.component || 'el-step';
+
+const uiProps = computed(() => ui?.props(props) || props);
 </script>

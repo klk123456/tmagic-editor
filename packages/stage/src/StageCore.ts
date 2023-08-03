@@ -18,13 +18,15 @@
 
 import { EventEmitter } from 'events';
 
-import { Id } from '@tmagic/schema';
+import type { MoveableOptions } from 'moveable';
+
+import type { Id } from '@tmagic/schema';
 
 import ActionManager from './ActionManager';
 import { DEFAULT_ZOOM } from './const';
 import StageMask from './StageMask';
 import StageRender from './StageRender';
-import {
+import type {
   ActionManagerConfig,
   CustomizeRender,
   GuidesEventData,
@@ -123,6 +125,10 @@ export default class StageCore extends EventEmitter {
     this.actionManager.highlight(idOrEl);
   }
 
+  public clearHighlight(): void {
+    this.actionManager.clearHighlight();
+  }
+
   /**
    * 更新组件
    * @param data 更新组件的数据
@@ -205,6 +211,10 @@ export default class StageCore extends EventEmitter {
    */
   public delayedMarkContainer(event: MouseEvent, excludeElList: Element[] = []): NodeJS.Timeout | undefined {
     return this.actionManager.delayedMarkContainer(event, excludeElList);
+  }
+
+  public getMoveableOption<K extends keyof MoveableOptions>(key: K): MoveableOptions[K] | undefined {
+    return this.actionManager.getMoveableOption(key);
   }
 
   /**

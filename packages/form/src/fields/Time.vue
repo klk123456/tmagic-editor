@@ -10,11 +10,15 @@
   ></TMagicTimePicker>
 </template>
 
-<script lang="ts" setup name="MFormTime">
+<script lang="ts" setup>
 import { TMagicTimePicker } from '@tmagic/design';
 
 import { TimeConfig } from '../schema';
 import { useAddField } from '../utils/useAddField';
+
+defineOptions({
+  name: 'MFormTime',
+});
 
 const props = defineProps<{
   config: TimeConfig;
@@ -25,6 +29,7 @@ const props = defineProps<{
   prop: string;
   disabled?: boolean;
   size?: 'large' | 'default' | 'small';
+  lastValues?: Record<string, any>;
 }>();
 
 const emit = defineEmits(['change']);

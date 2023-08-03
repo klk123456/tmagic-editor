@@ -1,21 +1,24 @@
 <template>
-  <component class="tmagic-design-option" :is="uiComponent.component" v-bind="uiProps">
+  <component class="tmagic-design-option" :is="uiComponent" v-bind="uiProps">
     <slot></slot>
   </component>
 </template>
 
-<script setup lang="ts" name="TMOption">
+<script setup lang="ts">
 import { computed } from 'vue';
 
 import { getConfig } from './config';
+import type { OptionProps } from './types';
 
-const props = defineProps<{
-  value?: any;
-  label?: string;
-  disabled?: boolean;
-}>();
+defineOptions({
+  name: 'TMOption',
+});
 
-const uiComponent = getConfig('components').option;
+const props = defineProps<OptionProps>();
 
-const uiProps = computed(() => uiComponent.props(props));
+const ui = getConfig('components')?.option;
+
+const uiComponent = ui?.component || 'el-option';
+
+const uiProps = computed(() => ui?.props(props) || props);
 </script>

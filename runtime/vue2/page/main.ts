@@ -28,15 +28,16 @@ import request from './utils/request';
 import AppComponent from './App.vue';
 import { getLocalConfig } from './utils';
 
+import '@tmagic/utils/resetcss.css';
 Vue.use(request);
 
-const designWidth = document.documentElement.getBoundingClientRect().width;
-
 const app = new Core({
-  designWidth,
+  ua: window.navigator.userAgent,
   config: ((getUrlParam('localPreview') ? getLocalConfig() : window.magicDSL) || [])[0] || {},
   curPage: getUrlParam('page'),
 });
+
+app.setDesignWidth(app.env.isWeb ? window.document.documentElement.getBoundingClientRect().width : 375);
 
 Object.keys(components).forEach((type: string) => {
   Vue.component(`magic-ui-${type}`, components[type]);

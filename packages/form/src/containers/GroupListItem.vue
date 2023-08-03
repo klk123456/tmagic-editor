@@ -1,17 +1,15 @@
 <template>
   <div class="m-fields-group-list-item">
     <div>
-      <TMagicIcon style="margin-right: 7px" @click="expandHandler"
-        ><CaretBottom v-if="expand" /><CaretRight v-else
-      /></TMagicIcon>
-
-      <TMagicButton text :disabled="disabled" @click="expandHandler">{{ title }}</TMagicButton>
+      <TMagicButton text :disabled="disabled" :icon="expand ? CaretBottom : CaretRight" @click="expandHandler">{{
+        title
+      }}</TMagicButton>
 
       <TMagicButton
         v-show="showDelete(parseInt(String(index)))"
         style="color: #f56c6c"
         text
-        :icon="Delete"
+        :icon="Delete"  
         :disabled="disabled"
         @click="removeHandler"
       ></TMagicButton>
@@ -44,8 +42,8 @@
   </div>
 </template>
 
-<script setup lang="ts" name="MFormGroupListItem">
-import { computed, inject, ref, watchEffect } from 'vue';
+<script setup lang="ts">
+import { computed, inject, ref } from 'vue';
 import { CaretBottom, CaretRight, CaretTop, Delete } from '@element-plus/icons-vue';
 
 import { TMagicButton, TMagicIcon } from '@tmagic/design';
@@ -54,6 +52,10 @@ import { FormState, GroupListConfig } from '../schema';
 import { filterFunction } from '../utils/form';
 
 import Container from './Container.vue';
+
+defineOptions({
+  name: 'MFormGroupListItem',
+});
 
 const props = defineProps<{
   model: any;
@@ -71,11 +73,7 @@ const props = defineProps<{
 const emit = defineEmits(['swap-item', 'remove-item', 'change', 'addDiffCount']);
 
 const mForm = inject<FormState | undefined>('mForm');
-const expand = ref(false);
-
-watchEffect(() => {
-  expand.value = !props.index;
-});
+const expand = ref(props.config.expandAll || !props.index);
 
 const rowConfig = computed(() => ({
   type: 'row',

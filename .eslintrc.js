@@ -31,6 +31,7 @@ module.exports = {
   ignorePatterns: ['.eslintrc.js'],
   rules: {
     'vue/no-mutating-props': 'off',
+    'vue/multi-word-component-names': 'off',
     'no-param-reassign': 'off',
     '@typescript-eslint/no-require-imports': 'off',
     "@typescript-eslint/no-misused-promises": [
@@ -52,7 +53,7 @@ module.exports = {
           ["^(react|vue|vite)", "^@?\\w"],
           ["^(@tmagic)(/.*|$)"],
           // Internal packages.
-          ["^(@|@editor)(/.*|$)"],
+          ["^(@|@editor|@data-source)(/.*|$)"],
           // Side effect imports.
           ["^\\u0000"],
           // Parent imports. Put `..` last.

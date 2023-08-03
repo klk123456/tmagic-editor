@@ -4,14 +4,16 @@
       <ToolButton
         v-for="(item, index) in menuData"
         event-type="mouseup"
+        ref="buttons"
         :data="item"
         :key="index"
         @mouseup="hide"
-        @mouseenter="showSubMenu(item)"
+        @mouseenter="showSubMenu(item, index)"
       ></ToolButton>
     </div>
     <teleport to="body">
       <content-menu
+        v-if="subMenuData.length"
         class="sub-menu"
         ref="subMenu"
         :menu-data="subMenuData"
@@ -22,12 +24,16 @@
   </div>
 </template>
 
-<script lang="ts" setup name="MEditorContentMenu">
+<script lang="ts" setup>
 import { nextTick, onMounted, onUnmounted, ref } from 'vue';
 
-import { MenuButton, MenuComponent } from '../type';
+import { MenuButton, MenuComponent } from '@editor/type';
 
 import ToolButton from './ToolButton.vue';
+
+defineOptions({
+  name: 'MEditorContentMenu',
+});
 
 const props = withDefaults(
   defineProps<{
@@ -43,6 +49,7 @@ const props = withDefaults(
 const emit = defineEmits(['hide', 'show']);
 
 const menu = ref<HTMLDivElement>();
+const buttons = ref<InstanceType<typeof ToolButton>[]>();
 const subMenu = ref<any>();
 const visible = ref(false);
 const subMenuData = ref<(MenuButton | MenuComponent)[]>([]);
@@ -50,6 +57,8 @@ const menuStyle = ref({
   left: '0',
   top: '0',
 });
+
+const contains = (el: HTMLElement) => menu.value?.contains(el) || subMenu.value?.contains(el);
 
 const hide = () => {
   if (!visible.value) return;
@@ -65,7 +74,7 @@ const hideHandler = (e: MouseEvent) => {
   if (!visible.value || !target) {
     return;
   }
-  if (menu.value?.contains(target) || subMenu.value?.$el?.contains(target)) {
+  if (contains(target)) {
     return;
   }
   hide();
@@ -94,19 +103,27 @@ const show = (e: MouseEvent) => {
   }, 300);
 };
 
-const showSubMenu = (item: MenuButton | MenuComponent) => {
+const showSubMenu = (item: MenuButton | MenuComponent, index: number) => {
   const menuItem = item as MenuButton;
   if (typeof item !== 'object' || !menuItem.items?.length) {
     return;
   }
 
-  subMenuData.value = menuItem.items;
-  if (menu.value) {
-    subMenu.value.show({
-      clientX: menu.value.offsetLeft + menu.value.clientWidth,
-      clientY: menu.value.offsetTop,
-    });
-  }
+  subMenuData.value = menuItem.items || [];
+  setTimeout(() => {
+    if (menu.value) {
+      // 将子菜单放置在按钮右侧，与按钮齐平
+      let y = menu.value.offsetTop;
+      if (buttons.value?.[index].$el) {
+        const rect = buttons.value?.[index].$el.getBoundingClientRect();
+        y = rect.top;
+      }
+      subMenu.value?.show({
+        clientX: menu.value.offsetLeft + menu.value.clientWidth,
+        clientY: y,
+      });
+    }
+  }, 0);
 };
 
 onMounted(() => {
@@ -122,7 +139,9 @@ onUnmounted(() => {
 });
 
 defineExpose({
+  menu,
   hide,
   show,
+  contains,
 });
 </script>

@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 
 import type { MComponent } from '@tmagic/schema';
 
@@ -27,16 +27,14 @@ interface TextProps {
 }
 
 const Text: React.FC<TextProps> = ({ config }) => {
-  const { app, ref } = useApp({ config });
+  const { app } = useApp({ config });
 
   if (!app) return null;
 
-  const [displayText] = useState(config.text);
-
   return (
-    <div ref={ref} className="magic-ui-text" style={app.transformStyle(config.style || {})} id={`${config.id || ''}`}>
-      {displayText}
-    </div>
+    <p className="magic-ui-text" style={app.transformStyle(config.style || {})} id={`${config.id || ''}`}>
+      {config.text}
+    </p>
   );
 };
 

@@ -1,17 +1,17 @@
 <template>
-  <component class="tmagic-design-dropdown-menu" :is="uiComponent.component" v-bind="uiProps">
+  <component class="tmagic-design-dropdown-menu" :is="uiComponent">
     <slot></slot>
   </component>
 </template>
 
-<script setup lang="ts" name="TMDropdownMenu">
-import { computed } from 'vue';
-
+<script setup lang="ts">
 import { getConfig } from './config';
 
-const props = defineProps();
+defineOptions({
+  name: 'TMDropdownMenu',
+});
 
-const uiComponent = getConfig('components').dropdownMenu;
+const ui = getConfig('components')?.dropdownMenu;
 
-const uiProps = computed(() => uiComponent.props(props));
+const uiComponent = ui?.component || 'el-dropdown-menu';
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <component class="tmagic-design-card" :is="uiComponent.component" v-bind="uiProps">
+  <component class="tmagic-design-card" :is="uiComponent" v-bind="uiProps">
     <template #header>
       <slot name="header" class="header"></slot>
     </template>
@@ -10,18 +10,21 @@
   </component>
 </template>
 
-<script setup lang="ts" name="TMCard">
+<script setup lang="ts">
 import { computed } from 'vue';
 
 import { getConfig } from './config';
+import type { CardProps } from './types';
 
-const props = defineProps<{
-  bodyStyle?: Record<string, any>;
-  shadow?: string;
-  header?: string;
-}>();
+defineOptions({
+  name: 'TMCard',
+});
 
-const uiComponent = getConfig('components').card;
+const props = defineProps<CardProps>();
 
-const uiProps = computed(() => uiComponent.props(props));
+const ui = getConfig('components')?.card;
+
+const uiComponent = ui?.component || 'el-card';
+
+const uiProps = computed(() => ui?.props(props) || props);
 </script>

@@ -26,15 +26,19 @@
   </div>
 </template>
 
-<script setup lang="ts" name="MEditorPageBarScrollContainer">
+<script setup lang="ts">
 import { computed, inject, nextTick, onMounted, onUnmounted, ref, toRaw, watch } from 'vue';
 import { ArrowLeftBold, ArrowRightBold, Plus } from '@element-plus/icons-vue';
 
 import { NodeType } from '@tmagic/schema';
 
-import Icon from '../../components/Icon.vue';
-import type { Services } from '../../type';
-import { generatePageNameByApp } from '../../utils/editor';
+import Icon from '@editor/components/Icon.vue';
+import type { Services } from '@editor/type';
+import { generatePageNameByApp } from '@editor/utils/editor';
+
+defineOptions({
+  name: 'MEditorPageBarScrollContainer',
+});
 
 const services = inject<Services>('services');
 const editorService = services?.editorService;

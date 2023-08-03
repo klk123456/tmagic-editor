@@ -13,17 +13,17 @@
         {{ isFullScreen ? '退出全屏' : '全屏' }}</TMagicButton
       >
       <TMagicButton type="primary" class="button" @click="saveAndClose">确认</TMagicButton>
-      <TMagicButton type="primary" class="button" @click="close">关闭</TMagicButton>
+      <TMagicButton class="button" @click="close">关闭</TMagicButton>
     </div>
     <div class="m-editor-content-bottom" v-else>
       <TMagicButton type="primary" class="button" @click="toggleFullScreen">
         {{ isFullScreen ? '退出全屏' : '全屏' }}</TMagicButton
       >
-      <TMagicButton type="primary" class="button" @click="close">关闭</TMagicButton>
+      <TMagicButton class="button" @click="close">关闭</TMagicButton>
     </div>
   </div>
 </template>
-<script lang="ts" setup name="MEditorCodeDraftEditor">
+<script lang="ts" setup>
 import { computed, inject, ref, watchEffect } from 'vue';
 import type * as monaco from 'monaco-editor';
 
@@ -31,8 +31,12 @@ import { TMagicButton, tMagicMessage, tMagicMessageBox } from '@tmagic/design';
 import { Id } from '@tmagic/schema';
 import { datetimeFormatter } from '@tmagic/utils';
 
-import MagicCodeEditor from '../layouts/CodeEditor.vue';
-import type { Services } from '../type';
+import MagicCodeEditor from '@editor/layouts/CodeEditor.vue';
+import type { Services } from '@editor/type';
+
+defineOptions({
+  name: 'MEditorCodeDraftEditor',
+});
 
 const props = withDefaults(
   defineProps<{
@@ -92,7 +96,7 @@ const saveCodeDraft = async (codeValue: string) => {
     return;
   }
   services?.codeBlockService.setCodeDraft(props.id, codeValue);
-  tMagicMessage.success(`代码草稿保存成功 ${datetimeFormatter(new Date())}`);
+  tMagicMessage.success(`代码草稿成功保存到本地 ${datetimeFormatter(new Date())}`);
 };
 
 // 保存并关闭
@@ -107,21 +111,23 @@ const saveAndClose = (): void => {
 const close = async (): Promise<void> => {
   const codeDraft = services?.codeBlockService.getCodeDraft(props.id);
   if (codeDraft) {
-    tMagicMessageBox
-      .confirm('您有代码修改未保存，是否保存后再关闭？', '提示', {
-        confirmButtonText: '确认',
-        cancelButtonText: '取消',
+    try {
+      await tMagicMessageBox.confirm('您有代码修改未保存，是否保存后再关闭？', '提示', {
+        confirmButtonText: '保存并关闭',
+        cancelButtonText: '直接关闭',
         type: 'warning',
-      })
-      .then(async () => {
-        // 保存之后再关闭
-        saveAndClose();
-      })
-      .catch(() => {
+        distinguishCancelAndClose: true,
+      });
+
+      // 保存之后再关闭
+      saveAndClose();
+    } catch (action: any) {
+      if (action === 'cancel') {
         // 删除草稿 直接关闭
         services?.codeBlockService.removeCodeDraft(props.id);
         emit('close');
-      });
+      }
+    }
   } else {
     emit('close');
   }
@@ -134,4 +140,9 @@ const toggleFullScreen = (): void => {
     codeEditor.value.focus();
   }
 };
+
+defineExpose({
+  saveAndClose,
+  close,
+});
 </script>

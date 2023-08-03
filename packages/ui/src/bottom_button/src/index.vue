@@ -123,15 +123,14 @@ export default {
   position: absolute;
   left: 0;
   // right: 0;
-  height: 100%;
-  width: 100%;
+  height: 4.063vw;
   // top: 0;
   text-align: right;
   z-index: 101;
   span {
     display: none;
-    height: 100%;
-    width: 100%;
+    
+    width: 12.5vw;
     border-radius: 2.063vw;
     line-height: 4.063vw;
     // margin-left: 8.625vw;

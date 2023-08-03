@@ -1,11 +1,15 @@
 <template>
-  <component class="tmagic-design-row" :is="uiComponent.component">
+  <component class="tmagic-design-row" :is="uiComponent">
     <slot></slot>
   </component>
 </template>
 
-<script setup lang="ts" name="TMRow">
+<script setup lang="ts">
 import { getConfig } from './config';
 
-const uiComponent = getConfig('components').row;
+defineOptions({
+  name: 'TMRow',
+});
+
+const uiComponent = getConfig('components')?.row.component || 'el-row';
 </script>

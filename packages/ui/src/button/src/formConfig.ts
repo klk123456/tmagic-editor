@@ -18,7 +18,24 @@
 
 export default [
   {
-    text: '文本',
-    name: 'text',
+    text: "文本",
+    name: "text",
+    type: "data-source-input",
+  },
+  {
+    name: "atr",
+    items: [
+
+      {
+        text: "type",
+        name: "type",
+      },
+      {
+        text: "disabled",
+        name: "disabled",
+        type: "switch",
+      },
+
+    ],
   },
 ];

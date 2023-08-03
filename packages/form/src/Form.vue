@@ -26,7 +26,7 @@
   </TMagicForm>
 </template>
 
-<script setup lang="ts" name="MForm">
+<script setup lang="ts">
 import { provide, reactive, ref, toRaw, watch, watchEffect } from 'vue';
 import { isEqual } from 'lodash-es';
 import cloneDeep from 'lodash-es/cloneDeep';
@@ -37,6 +37,10 @@ import Container from './containers/Container.vue';
 import { getConfig } from './utils/config';
 import { initValue } from './utils/form';
 import type { FormConfig, FormState, FormValue, ValidateError } from './schema';
+
+defineOptions({
+  name: 'MForm',
+});
 
 const props = withDefaults(
   defineProps<{
@@ -58,6 +62,7 @@ const props = withDefaults(
     labelPosition?: string;
     keyProp?: string;
     popperClass?: string;
+    extendState?: (state: FormState) => Record<string, any> | Promise<Record<string, any>>;
   }>(),
   {
     config: () => [],
@@ -110,7 +115,7 @@ const formState: FormState = reactive<FormState>({
   },
 });
 
-watchEffect(() => {
+watchEffect(async () => {
   formState.initValues = props.initValues;
   formState.lastValues = props.lastValues;
   formState.isCompare = props.isCompare;
@@ -118,6 +123,13 @@ watchEffect(() => {
   formState.keyProp = props.keyProp;
   formState.popperClass = props.popperClass;
   formState.parentValues = props.parentValues;
+
+  if (typeof props.extendState === 'function') {
+    const state = (await props.extendState(formState)) || {};
+    Object.entries(state).forEach(([key, value]) => {
+      formState[key] = value;
+    });
+  }
 });
 
 provide('mForm', formState);
